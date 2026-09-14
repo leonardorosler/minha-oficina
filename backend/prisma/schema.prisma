@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum StatusAtendimento {
+  AGUARDANDO
+  EM_SERVICO
+  PRONTO
+  FINALIZADO
+}
+
+model Usuario {
+  id           Int      @id @default(autoincrement())
+  nome         String   @db.VarChar(100)
+  email        String   @unique @db.VarChar(100)
+  senhaHash    String   @map("senha_hash") @db.VarChar(255)
+  criadoEm     DateTime @default(now()) @map("criado_em")
+  atualizadoEm DateTime @updatedAt @map("atualizado_em")
+
+  atendimentos Atendimento[]
+
+  @@map("usuarios")
+}
+
+model Cliente {
+  id           Int      @id @default(autoincrement())
+  nome         String   @db.VarChar(100)
+  telefone     String   @db.VarChar(20)
+  email        String?  @db.VarChar(100)
+  cpf          String?  @unique @db.VarChar(14)
+  endereco     String?  @db.VarChar(200)
+  observacoes  String?
+  criadoEm     DateTime @default(now()) @map("criado_em")
+  atualizadoEm DateTime @updatedAt @map("atualizado_em")
+
+  veiculos Veiculo[]
+
+  @@map("clientes")
+}
+
+model Veiculo {
+  id           Int      @id @default(autoincrement())
+  clienteId    Int      @map("cliente_id")
+  placa        String   @unique @db.VarChar(10)
+  marca        String   @db.VarChar(50)
+  modelo       String   @db.VarChar(50)
+  ano          Int?
+  cor          String?  @db.VarChar(30)
+  observacoes  String?
+  criadoEm     DateTime @default(now()) @map("criado_em")
+  atualizadoEm DateTime @updatedAt @map("atualizado_em")
+
+  cliente      Cliente       @relation(fields: [clienteId], references: [id])
+  atendimentos Atendimento[]
+
+  @@map("veiculos")
+}
+
+model Atendimento {
+  id               Int               @id @default(autoincrement())
+  veiculoId        Int               @map("veiculo_id")
+  usuarioId        Int               @map("usuario_id")
+  problemaRelatado String            @map("problema_relatado")
+  diagnostico      String?
+  servicoPrevisto  String?           @map("servico_previsto")
+  orcamentoValor   Decimal?          @map("orcamento_valor") @db.Decimal(10, 2)
+  observacoes      String?
+  status           StatusAtendimento @default(AGUARDANDO)
+  dataEntrada      DateTime          @default(now()) @map("data_entrada")
+  dataSaida        DateTime?         @map("data_saida")
+  criadoEm         DateTime          @default(now()) @map("criado_em")
+  atualizadoEm     DateTime          @updatedAt @map("atualizado_em")
+
+  veiculo         Veiculo           @relation(fields: [veiculoId], references: [id])
+  usuario         Usuario           @relation(fields: [usuarioId], references: [id])
+  historicoStatus HistoricoStatus[]
+
+  @@map("atendimentos")
+}
+
+model HistoricoStatus {
+  id             Int                @id @default(autoincrement())
+  atendimentoId  Int                @map("atendimento_id")
+  statusAnterior StatusAtendimento? @map("status_anterior")
+  statusNovo     StatusAtendimento  @map("status_novo")
+  observacao     String?
+  criadoEm       DateTime           @default(now()) @map("criado_em")
+
+  atendimento Atendimento @relation(fields: [atendimentoId], references: [id])
+
+  @@map("historico_status")
+}
