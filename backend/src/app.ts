@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors"
 import { prisma } from "./lib/prisma.js";
-
+import {clientesRouter} from "./modules/clientes/clientes.routes.js";
 export const app = express();
 
 app.use(cors());
@@ -11,6 +11,11 @@ app.get("/", (req, res) => {
   res.json({message: "API Minha Oficina funcionando"});
 });
  
+
+app.use("/clientes", clientesRouter);
+
+
+
 //teste de conexao com banco (rota temporária)
 app.get("/teste-db", async (req, res) => {
 
