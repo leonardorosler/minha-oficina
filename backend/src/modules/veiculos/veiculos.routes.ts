@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { buscarVeiculoPorIdController, buscarVeiculoPorPlacaController, cadastrarVeiculoController, listarAtendimentosDoVeiculoController, listarVeiculosController } from './veiculos.controller.js';
+import { atualizarVeiculoController, buscarVeiculoPorIdController, buscarVeiculoPorPlacaController, cadastrarVeiculoController, deletarVeiculoController, listarAtendimentosDoVeiculoController, listarVeiculosController } from './veiculos.controller.js';
 
 export const veiculosRouter = Router();
 
@@ -17,3 +17,10 @@ veiculosRouter.get('/:id', buscarVeiculoPorIdController);
 
 //listar atendimentos do veiculo
 veiculosRouter.get('/:id/atendimentos', listarAtendimentosDoVeiculoController);
+
+//atualizar veiculo
+veiculosRouter.put('/:id', atualizarVeiculoController);
+
+//deletar veiculo
+veiculosRouter.delete('/:id', deletarVeiculoController);
+

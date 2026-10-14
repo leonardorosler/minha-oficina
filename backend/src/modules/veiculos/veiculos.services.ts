@@ -111,3 +111,42 @@ export async function listarAtendimentosDoVeiculo(veiculoId: number) {
 
   return atendimentos;
 }
+
+
+//atualizar veiculo
+
+export async function atualizarVeiculo(id: number, data: Partial<CadastraVeiculo>) {
+  if (data.placa) {
+    const placaJaCadastrada = await prisma.veiculo.findUnique({
+      where: {
+        placa: data.placa
+      }
+    });
+
+    if (placaJaCadastrada && placaJaCadastrada.id !== id) {
+      throw new Error("Placa já cadastrada");
+    }
+  }
+
+  const veiculo = await prisma.veiculo.update({
+    where: {
+      id: id
+    },
+    data: data
+  });
+
+  return veiculo;
+}
+
+
+//deletar veiculo
+
+export async function deletarVeiculo(id: number) {
+  const veiculo = await prisma.veiculo.delete({
+    where: {
+      id: id
+    }
+  });
+
+  return veiculo;
+}
