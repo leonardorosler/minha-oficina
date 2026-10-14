@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { cadastrarClientes, listarClientes, atualizarClientes, deletarClientes } from './clientes.services.js';
+import { cadastrarClientes, listarClientes, buscarClientePorId, buscarClientePorCpf, atualizarClientes, deletarClientes } from './clientes.services.js';
 
 
 
@@ -40,6 +40,38 @@ export async function listarClientesController(  _req: Request,  res: Response)
       error: "Erro ao listar clientes",
     });
   }
+}
+
+//buscar cliente por id
+export async function buscarClientePorIdController(req: Request, res: Response) {
+    try {
+        const { id } = req.params;
+        const cliente = await buscarClientePorId(Number(id));
+
+        if (!cliente) {
+            return res.status(404).json({ error: 'Cliente não encontrado' });
+        }
+
+        res.status(200).json(cliente);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar cliente' });
+    }
+}
+
+//buscar cliente por cpf
+export async function buscarClientePorCpfController(req: Request, res: Response) {
+    try {
+        const { cpf } = req.params;
+        const cliente = await buscarClientePorCpf(String(cpf));
+
+        if (!cliente) {
+            return res.status(404).json({ error: 'Cliente não encontrado' });
+        }
+
+        res.status(200).json(cliente);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar cliente' });
+    }
 }
 
 //atualizar cliente

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { atualizarClientescontroller, cadastrarClientescontroller, deletarClientescontroller, listarClientesController } from './clientes.controller.js';
+import { atualizarClientescontroller, buscarClientePorCpfController, buscarClientePorIdController, cadastrarClientescontroller, deletarClientescontroller, listarClientesController } from './clientes.controller.js';
 
 export const clientesRouter = Router();
 
@@ -8,6 +8,12 @@ clientesRouter.post('/', cadastrarClientescontroller);
 
 //listar clientes
 clientesRouter.get('/', listarClientesController);
+
+//buscar cliente por cpf
+clientesRouter.get('/cpf/:cpf', buscarClientePorCpfController);
+
+//buscar cliente por id
+clientesRouter.get('/:id', buscarClientePorIdController);
 
 //atualizar cliente
 clientesRouter.put('/:id', atualizarClientescontroller);

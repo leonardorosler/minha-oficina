@@ -50,6 +50,32 @@ export async function listarClientes( )
 }
 
 
+//buscar cliente por id
+
+export async function buscarClientePorId(id: number) {
+  const cliente = await prisma.cliente.findUnique({
+    where: {
+      id: id
+    }
+  });
+
+  return cliente;
+}
+
+
+//buscar cliente por cpf
+
+export async function buscarClientePorCpf(cpf: string) {
+  const cliente = await prisma.cliente.findUnique({
+    where: {
+      cpf: cpf
+    }
+  });
+
+  return cliente;
+}
+
+
 
 //atualizar cliente
 
