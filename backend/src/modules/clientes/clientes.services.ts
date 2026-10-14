@@ -89,6 +89,28 @@ export async function listarVeiculosDoCliente(clienteId: number) {
 }
 
 
+//listar historico de atendimentos do cliente
+
+export async function listarAtendimentosDoCliente(clienteId: number) {
+  const atendimentos = await prisma.atendimento.findMany({
+    where: {
+      veiculo: {
+        clienteId: clienteId
+      }
+    },
+    include: {
+      veiculo: true,
+      historicoStatus: true
+    },
+    orderBy: {
+      dataEntrada: 'desc'
+    }
+  });
+
+  return atendimentos;
+}
+
+
 
 //atualizar cliente
 

@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { cadastrarClientes, listarClientes, buscarClientePorId, buscarClientePorCpf, listarVeiculosDoCliente, atualizarClientes, deletarClientes } from './clientes.services.js';
+import { cadastrarClientes, listarClientes, buscarClientePorId, buscarClientePorCpf, listarVeiculosDoCliente, listarAtendimentosDoCliente, atualizarClientes, deletarClientes } from './clientes.services.js';
 
 
 
@@ -88,6 +88,23 @@ export async function listarVeiculosDoClienteController(req: Request, res: Respo
         res.status(200).json(veiculos);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao listar veículos do cliente' });
+    }
+}
+
+//listar historico de atendimentos do cliente
+export async function listarAtendimentosDoClienteController(req: Request, res: Response) {
+    try {
+        const { id } = req.params;
+        const cliente = await buscarClientePorId(Number(id));
+
+        if (!cliente) {
+            return res.status(404).json({ error: 'Cliente não encontrado' });
+        }
+
+        const atendimentos = await listarAtendimentosDoCliente(Number(id));
+        res.status(200).json(atendimentos);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao listar histórico de atendimentos do cliente' });
     }
 }
 
