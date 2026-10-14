@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { cadastrarVeiculo, listarVeiculos, buscarVeiculoPorId, buscarVeiculoPorPlaca } from './veiculos.services.js';
+import { cadastrarVeiculo, listarVeiculos, buscarVeiculoPorId, buscarVeiculoPorPlaca, listarAtendimentosDoVeiculo } from './veiculos.services.js';
 
 
 
@@ -64,6 +64,23 @@ export async function buscarVeiculoPorPlacaController(req: Request, res: Respons
         res.status(200).json(veiculo);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao buscar veículo' });
+    }
+}
+
+//listar atendimentos do veiculo
+export async function listarAtendimentosDoVeiculoController(req: Request, res: Response) {
+    try {
+        const { id } = req.params;
+        const veiculo = await buscarVeiculoPorId(Number(id));
+
+        if (!veiculo) {
+            return res.status(404).json({ error: 'Veículo não encontrado' });
+        }
+
+        const atendimentos = await listarAtendimentosDoVeiculo(Number(id));
+        res.status(200).json(atendimentos);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao listar atendimentos do veículo' });
     }
 }
 

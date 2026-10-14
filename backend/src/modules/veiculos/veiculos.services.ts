@@ -92,3 +92,22 @@ export async function buscarVeiculoPorPlaca(placa: string) {
 
   return veiculo;
 }
+
+
+//listar atendimentos do veiculo
+
+export async function listarAtendimentosDoVeiculo(veiculoId: number) {
+  const atendimentos = await prisma.atendimento.findMany({
+    where: {
+      veiculoId: veiculoId
+    },
+    include: {
+      historicoStatus: true
+    },
+    orderBy: {
+      dataEntrada: 'desc'
+    }
+  });
+
+  return atendimentos;
+}
