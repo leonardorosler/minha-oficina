@@ -1,4 +1,3 @@
-import { number } from "zod";
 import { prisma } from "../../lib/prisma.js";
 
 interface CadastraCliente {    
@@ -42,16 +41,14 @@ export async function cadastrarClientes(data: CadastraCliente) {
 
 }
 
-//listar clientes
+//listar clientes 
 
-export async function listarClientes() {
-  const clientes = await prisma.cliente.findMany();
+export async function listarClientes( ) 
+{
 
-  if (!clientes) {
-    throw new Error("Nenhum cliente encontrado");
-  }
-  return clientes;
+  return prisma.cliente.findMany();
 }
+
 
 
 //atualizar cliente

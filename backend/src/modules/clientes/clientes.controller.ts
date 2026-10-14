@@ -1,6 +1,5 @@
 import type { Request, Response } from 'express';
 import { cadastrarClientes, listarClientes, atualizarClientes, deletarClientes } from './clientes.services.js';
-import { string } from 'zod';
 
 
 
@@ -26,21 +25,21 @@ export async function cadastrarClientescontroller (req: Request, res: Response) 
 }
 
 
-
 //listar clientes
-export async function listarClientescontroller (req: Request, res: Response) {
+export async function listarClientesController(  _req: Request,  res: Response) 
+{
+  try {
+    
+    const clientes = await listarClientes();
 
-    try {
-        const clientes = await listarClientes();
-        if (!clientes) {
 
-            return res.status(404).json({ error: 'Nenhum cliente encontrado' });
-        }
-        res.status(200).json(clientes);
+    return res.status(200).json(clientes);
 
-    } catch (error) {
-        res.status(500).json({ error: 'Erro ao listar clientes' });
-    }
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erro ao listar clientes",
+    });
+  }
 }
 
 //atualizar cliente
