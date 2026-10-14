@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { cadastrarClientes, listarClientes, buscarClientePorId, buscarClientePorCpf, atualizarClientes, deletarClientes } from './clientes.services.js';
+import { cadastrarClientes, listarClientes, buscarClientePorId, buscarClientePorCpf, listarVeiculosDoCliente, atualizarClientes, deletarClientes } from './clientes.services.js';
 
 
 
@@ -71,6 +71,23 @@ export async function buscarClientePorCpfController(req: Request, res: Response)
         res.status(200).json(cliente);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao buscar cliente' });
+    }
+}
+
+//listar veiculos do cliente
+export async function listarVeiculosDoClienteController(req: Request, res: Response) {
+    try {
+        const { id } = req.params;
+        const cliente = await buscarClientePorId(Number(id));
+
+        if (!cliente) {
+            return res.status(404).json({ error: 'Cliente não encontrado' });
+        }
+
+        const veiculos = await listarVeiculosDoCliente(Number(id));
+        res.status(200).json(veiculos);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao listar veículos do cliente' });
     }
 }
 

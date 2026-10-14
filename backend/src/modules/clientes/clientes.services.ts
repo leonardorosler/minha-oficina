@@ -76,6 +76,19 @@ export async function buscarClientePorCpf(cpf: string) {
 }
 
 
+//listar veiculos do cliente
+
+export async function listarVeiculosDoCliente(clienteId: number) {
+  const veiculos = await prisma.veiculo.findMany({
+    where: {
+      clienteId: clienteId
+    }
+  });
+
+  return veiculos;
+}
+
+
 
 //atualizar cliente
 
