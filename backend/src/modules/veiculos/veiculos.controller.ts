@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { cadastrarVeiculo } from './veiculos.services.js';
+import { cadastrarVeiculo, listarVeiculos, buscarVeiculoPorId, buscarVeiculoPorPlaca } from './veiculos.services.js';
 
 
 
@@ -24,3 +24,46 @@ export async function cadastrarVeiculoController(req: Request, res: Response) {
         res.status(500).json({ error: 'Erro ao cadastrar veículo' });
     }
 }
+
+//listar veiculos
+export async function listarVeiculosController(_req: Request, res: Response) {
+    try {
+        const veiculos = await listarVeiculos();
+        res.status(200).json(veiculos);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao listar veículos' });
+    }
+}
+
+//buscar veiculo por id
+export async function buscarVeiculoPorIdController(req: Request, res: Response) {
+    try {
+        const { id } = req.params;
+        const veiculo = await buscarVeiculoPorId(Number(id));
+
+        if (!veiculo) {
+            return res.status(404).json({ error: 'Veículo não encontrado' });
+        }
+
+        res.status(200).json(veiculo);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar veículo' });
+    }
+}
+
+//buscar veiculo pela placa
+export async function buscarVeiculoPorPlacaController(req: Request, res: Response) {
+    try {
+        const { placa } = req.params;
+        const veiculo = await buscarVeiculoPorPlaca(String(placa));
+
+        if (!veiculo) {
+            return res.status(404).json({ error: 'Veículo não encontrado' });
+        }
+
+        res.status(200).json(veiculo);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar veículo' });
+    }
+}
+

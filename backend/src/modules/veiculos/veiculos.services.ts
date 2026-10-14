@@ -49,3 +49,46 @@ export async function cadastrarVeiculo(data: CadastraVeiculo) {
 
   return veiculo;
 }
+
+
+//listar veiculos
+
+export async function listarVeiculos() {
+  return prisma.veiculo.findMany({
+    include: {
+      cliente: true
+    }
+  });
+}
+
+
+//buscar veiculo por id
+
+export async function buscarVeiculoPorId(id: number) {
+  const veiculo = await prisma.veiculo.findUnique({
+    where: {
+      id: id
+    },
+    include: {
+      cliente: true
+    }
+  });
+
+  return veiculo;
+}
+
+
+//buscar veiculo pela placa
+
+export async function buscarVeiculoPorPlaca(placa: string) {
+  const veiculo = await prisma.veiculo.findUnique({
+    where: {
+      placa: placa
+    },
+    include: {
+      cliente: true
+    }
+  });
+
+  return veiculo;
+}
