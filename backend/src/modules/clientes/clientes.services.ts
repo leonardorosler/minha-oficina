@@ -1,4 +1,3 @@
-import { number } from "zod";
 import { prisma } from "../../lib/prisma.js";
 
 interface CadastraCliente {    
@@ -42,16 +41,75 @@ export async function cadastrarClientes(data: CadastraCliente) {
 
 }
 
-//listar clientes
+//listar clientes 
 
-export async function listarClientes() {
-  const clientes = await prisma.cliente.findMany();
+export async function listarClientes( ) 
+{
 
-  if (!clientes) {
-    throw new Error("Nenhum cliente encontrado");
-  }
-  return clientes;
+  return prisma.cliente.findMany();
 }
+
+
+//buscar cliente por id
+
+export async function buscarClientePorId(id: number) {
+  const cliente = await prisma.cliente.findUnique({
+    where: {
+      id: id
+    }
+  });
+
+  return cliente;
+}
+
+
+//buscar cliente por cpf
+
+export async function buscarClientePorCpf(cpf: string) {
+  const cliente = await prisma.cliente.findUnique({
+    where: {
+      cpf: cpf
+    }
+  });
+
+  return cliente;
+}
+
+
+//listar veiculos do cliente
+
+export async function listarVeiculosDoCliente(clienteId: number) {
+  const veiculos = await prisma.veiculo.findMany({
+    where: {
+      clienteId: clienteId
+    }
+  });
+
+  return veiculos;
+}
+
+
+//listar historico de atendimentos do cliente
+
+export async function listarAtendimentosDoCliente(clienteId: number) {
+  const atendimentos = await prisma.atendimento.findMany({
+    where: {
+      veiculo: {
+        clienteId: clienteId
+      }
+    },
+    include: {
+      veiculo: true,
+      historicoStatus: true
+    },
+    orderBy: {
+      dataEntrada: 'desc'
+    }
+  });
+
+  return atendimentos;
+}
+
 
 
 //atualizar cliente
