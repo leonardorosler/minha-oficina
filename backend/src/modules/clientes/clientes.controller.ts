@@ -20,6 +20,9 @@ export async function cadastrarClientescontroller (req: Request, res: Response) 
         res.status(201).json(cliente);
 
     } catch (error) {
+        if (error instanceof Error && error.message === 'Cliente já cadastrado') {
+            return res.status(409).json({ error: error.message });
+        }
         res.status(500).json({ error: 'Erro ao cadastrar cliente' });
     }
 }
@@ -112,6 +115,12 @@ export async function listarAtendimentosDoClienteController(req: Request, res: R
 export async function atualizarClientescontroller (req: Request, res: Response) {
     try {
         const { id } = req.params;
+        const clienteExistente = await buscarClientePorId(Number(id));
+
+        if (!clienteExistente) {
+            return res.status(404).json({ error: 'Cliente não encontrado' });
+        }
+
         const { nome, telefone, email, cpf, endereco, observacoes } = req.body; 
         const cliente = await atualizarClientes(Number(id), { nome, telefone, email, cpf, endereco, observacoes }); 
         res.status(200).json(cliente);
@@ -126,10 +135,13 @@ export async function atualizarClientescontroller (req: Request, res: Response) 
 export async function deletarClientescontroller (req: Request, res: Response) {
     try {
         const { id } = req.params;
-        const cliente = await deletarClientes(Number(id));
-        if (!cliente) {
+        const clienteExistente = await buscarClientePorId(Number(id));
+
+        if (!clienteExistente) {
             return res.status(404).json({ error: 'Cliente não encontrado' });
         }
+
+        const cliente = await deletarClientes(Number(id));
         res.status(200).json(cliente);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao deletar cliente' });
