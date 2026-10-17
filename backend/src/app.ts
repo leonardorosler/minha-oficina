@@ -5,15 +5,20 @@ import { clientesRouter } from "./modules/clientes/clientes.routes.js";
 import { historicoRouter } from "./modules/historico/historico.routes.js";
 import { usuariosRouter } from "./modules/usuarios/usuarios.routes.js";
 import { veiculosRouter } from "./modules/veiculos/veiculos.routes.js";
+import { authRouter } from "./modules/auth/auth.routes.js";
+import { authMiddleware } from "./modules/middleware/auth.middleware.js";
+
 export const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.use("/historico", historicoRouter);
-app.use("/clientes", clientesRouter);
-app.use("/usuarios", usuariosRouter);
-app.use("/veiculos", veiculosRouter);
+app.use("/auth", authRouter);
+
+app.use("/historico", authMiddleware, historicoRouter);
+app.use("/clientes", authMiddleware, clientesRouter);
+app.use("/usuarios", authMiddleware, usuariosRouter);
+app.use("/veiculos", authMiddleware, veiculosRouter);
 
 app.get("/", (req, res) => {
   res.json({ message: "API Minha Oficina funcionando" });
