@@ -7,12 +7,25 @@ interface CadastraUsuario {
   senha: string;
 }
 
+interface EditaUsuario {
+  nome?: string;
+  email?: string;
+  senha?: string;
+}
+
+// campos que podem aparecer nas respostas, sem a senha.
+const camposUsuario = {
+  id: true,
+  nome: true,
+  email: true,
+  ativo: true,
+  criadoEm: true,
+  atualizadoEm: true,
+};
+
 export async function cadastraUsuario(data: CadastraUsuario) {
   const usuarioJaCadastrado = await prisma.usuario.findUnique({
-    where: {
-      email: data.email,
-    },
-    select: { id: true },
+    where: { email: data.email },
   });
 
   if (usuarioJaCadastrado) {
@@ -21,45 +34,27 @@ export async function cadastraUsuario(data: CadastraUsuario) {
 
   const senhaHash = await hash(data.senha, 12);
 
-  const usuario = await prisma.usuario.create({
+  return prisma.usuario.create({
     data: {
       nome: data.nome,
       email: data.email,
       senhaHash,
     },
-    select: {
-      id: true,
-      nome: true,
-      email: true,
-      criadoEm: true,
-      atualizadoEm: true,
-    },
+    select: camposUsuario,
   });
-
-  return usuario;
 }
 
-export async function listaUsuarios(){
-    const usuarios = await prisma.usuario.findMany();
-
-  if (!usuarios) {
-    throw new Error("Nenhum cliente encontrado");
-  }
-  return usuarios;
+export async function listaUsuarios() {
+  return prisma.usuario.findMany({
+    select: camposUsuario,
+    orderBy: { id: "asc" },
+  });
 }
 
 export async function buscaUsuarioPorId(id: number) {
   const usuario = await prisma.usuario.findUnique({
-    where: {
-      id,
-    },
-    select: {
-      id: true,
-      nome: true,
-      email: true,
-      criadoEm: true,
-      atualizadoEm: true,
-    },
+    where: { id },
+    select: camposUsuario,
   });
 
   if (!usuario) {
@@ -67,4 +62,41 @@ export async function buscaUsuarioPorId(id: number) {
   }
 
   return usuario;
+}
+
+export async function editaUsuario(id: number, data: EditaUsuario) {
+  await buscaUsuarioPorId(id);
+
+  if (data.email !== undefined) {
+    const usuarioComEmail = await prisma.usuario.findUnique({
+      where: { email: data.email },
+    });
+
+    if (usuarioComEmail && usuarioComEmail.id !== id) {
+      throw new Error("E-mail já cadastrado");
+    }
+  }
+
+  const senhaHash =
+    data.senha !== undefined ? await hash(data.senha, 12) : undefined;
+
+  return prisma.usuario.update({
+    where: { id },
+    data: {
+      nome: data.nome,
+      email: data.email,
+      senhaHash,
+    },
+    select: camposUsuario,
+  });
+}
+
+export async function desativaUsuario(id: number) {
+  await buscaUsuarioPorId(id);
+
+  return prisma.usuario.update({
+    where: { id },
+    data: { ativo: false },
+    select: camposUsuario,
+  });
 }
