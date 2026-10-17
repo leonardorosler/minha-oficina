@@ -5,6 +5,8 @@ import { clientesRouter } from "./modules/clientes/clientes.routes.js";
 import { historicoRouter } from "./modules/historico/historico.routes.js";
 import { usuariosRouter } from "./modules/usuarios/usuarios.routes.js";
 import { veiculosRouter } from "./modules/veiculos/veiculos.routes.js";
+import { authRouter } from "./modules/auth/auth.routes.js";
+
 export const app = express();
 
 app.use(cors());
@@ -14,6 +16,7 @@ app.use("/historico", historicoRouter);
 app.use("/clientes", clientesRouter);
 app.use("/usuarios", usuariosRouter);
 app.use("/veiculos", veiculosRouter);
+app.use("/auth", authRouter);
 
 app.get("/", (req, res) => {
   res.json({ message: "API Minha Oficina funcionando" });

@@ -1,11 +1,5 @@
 import { Router } from "express";
-import {
-  cadastraUsuarioController,
-  listaUsuarioController,
-  buscaUsuarioPorIdController,
-  editaUsuarioController,
-  desativaUsuarioController,
-} from "./usuarios.controller.js";
+import {  cadastraUsuarioController, listaUsuarioController, buscaUsuarioPorIdController, editaUsuarioController, desativaUsuarioController} from "./usuarios.controller.js";
 
 export const usuariosRouter = Router();
 

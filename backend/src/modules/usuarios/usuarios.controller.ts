@@ -7,11 +7,7 @@ import {
   desativaUsuario,
 } from "./usuarios.service.js";
 
-function respondeErro(
-  res: Response,
-  error: unknown,
-  mensagemPadrao: string,
-) {
+function respondeErro(res: Response, error: unknown, mensagemPadrao: string) {
   if (error instanceof Error) {
     if (error.message === "Usuário não encontrado") {
       return res.status(404).json({ error: error.message });
@@ -25,16 +21,16 @@ function respondeErro(
   return res.status(500).json({ error: mensagemPadrao });
 }
 
-export async function cadastraUsuarioController(
-  req: Request,
-  res: Response,
-) {
+export async function cadastraUsuarioController(req: Request, res: Response) {
   const { nome, email, senha } = req.body ?? {};
 
   if (
-    typeof nome !== "string" || !nome.trim() ||
-    typeof email !== "string" || !email.trim() ||
-    typeof senha !== "string" || !senha.trim()
+    typeof nome !== "string" ||
+    !nome.trim() ||
+    typeof email !== "string" ||
+    !email.trim() ||
+    typeof senha !== "string" ||
+    !senha.trim()
   ) {
     return res.status(400).json({
       error: "Nome, e-mail e senha são obrigatórios",
@@ -50,10 +46,7 @@ export async function cadastraUsuarioController(
   }
 }
 
-export async function listaUsuarioController(
-  req: Request,
-  res: Response,
-) {
+export async function listaUsuarioController(req: Request, res: Response) {
   try {
     const usuarios = await listaUsuarios();
 
@@ -63,10 +56,7 @@ export async function listaUsuarioController(
   }
 }
 
-export async function buscaUsuarioPorIdController(
-  req: Request,
-  res: Response,
-) {
+export async function buscaUsuarioPorIdController(req: Request, res: Response) {
   const id = Number(req.params.id);
 
   if (!Number.isInteger(id) || id <= 0) {
@@ -82,10 +72,7 @@ export async function buscaUsuarioPorIdController(
   }
 }
 
-export async function editaUsuarioController(
-  req: Request,
-  res: Response,
-) {
+export async function editaUsuarioController(req: Request, res: Response) {
   const id = Number(req.params.id);
   const { nome, email, senha } = req.body ?? {};
 
@@ -104,8 +91,7 @@ export async function editaUsuarioController(
   if (
     campos.some(
       (campo) =>
-        campo !== undefined &&
-        (typeof campo !== "string" || !campo.trim()),
+        campo !== undefined && (typeof campo !== "string" || !campo.trim()),
     )
   ) {
     return res.status(400).json({
@@ -122,10 +108,7 @@ export async function editaUsuarioController(
   }
 }
 
-export async function desativaUsuarioController(
-  req: Request,
-  res: Response,
-) {
+export async function desativaUsuarioController(req: Request, res: Response) {
   const id = Number(req.params.id);
 
   if (!Number.isInteger(id) || id <= 0) {

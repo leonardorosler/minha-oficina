@@ -1,0 +1,1 @@
+// Verificar o token nas rotas privadas
