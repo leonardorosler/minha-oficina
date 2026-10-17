@@ -12,6 +12,7 @@ enum StatusAtendimento {
   EM_SERVICO
   PRONTO
   FINALIZADO
+  CANCELADO
 }
 
 model Usuario {
