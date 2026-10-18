@@ -22,6 +22,7 @@ export interface EditarAtendimento {
   problemaRelatado?: string;
   diagnostico?: string | null;
   servicoPrevisto?: string | null;
+  servicoRealizado?: string | null;
   orcamentoValor?: number | null;
   observacoes?: string | null;
   status?: StatusAtendimento;
@@ -36,7 +37,9 @@ export interface FiltrosAtendimento {
 }
 
 export async function abrirAtendimento(data: AbrirAtendimento) {
-  const veiculo = await prisma.veiculo.findUnique({ where: { id: data.veiculoId } });
+  const veiculo = await prisma.veiculo.findUnique({
+    where: { id: data.veiculoId },
+  });
   if (!veiculo) throw new Error("Veículo não encontrado");
 
   return prisma.$transaction(async (tx) => {
@@ -74,7 +77,9 @@ export async function listarAtendimentos(filtros: FiltrosAtendimento) {
     where: {
       ...(filtros.status ? { status: filtros.status } : {}),
       ...(filtros.veiculoId ? { veiculoId: filtros.veiculoId } : {}),
-      ...(filtros.clienteId ? { veiculo: { clienteId: filtros.clienteId } } : {}),
+      ...(filtros.clienteId
+        ? { veiculo: { clienteId: filtros.clienteId } }
+        : {}),
       ...(filtros.dataInicio || filtros.dataFim
         ? {
             dataEntrada: {
@@ -98,7 +103,9 @@ export async function buscarAtendimentoPorId(id: number) {
 
 export async function editarAtendimento(id: number, data: EditarAtendimento) {
   if (data.veiculoId !== undefined) {
-    const veiculo = await prisma.veiculo.findUnique({ where: { id: data.veiculoId } });
+    const veiculo = await prisma.veiculo.findUnique({
+      where: { id: data.veiculoId },
+    });
     if (!veiculo) throw new Error("Veículo não encontrado");
   }
 
@@ -106,7 +113,8 @@ export async function editarAtendimento(id: number, data: EditarAtendimento) {
     const atual = await tx.atendimento.findUnique({ where: { id } });
     if (!atual) throw new Error("Atendimento não encontrado");
 
-    const mudouStatus = data.status !== undefined && data.status !== atual.status;
+    const mudouStatus =
+      data.status !== undefined && data.status !== atual.status;
     const atendimento = await tx.atendimento.update({
       where: { id },
       data: {
@@ -114,10 +122,13 @@ export async function editarAtendimento(id: number, data: EditarAtendimento) {
         problemaRelatado: data.problemaRelatado,
         diagnostico: data.diagnostico,
         servicoPrevisto: data.servicoPrevisto,
+        servicoRealizado: data.servicoRealizado,
         orcamentoValor: data.orcamentoValor,
         observacoes: data.observacoes,
         status: data.status,
-        ...(data.status === StatusAtendimento.FINALIZADO ? { dataSaida: new Date() } : {}),
+        ...(data.status === StatusAtendimento.FINALIZADO
+          ? { dataSaida: new Date() }
+          : {}),
       },
     });
 
@@ -145,7 +156,11 @@ export async function listarVeiculosNaOficina() {
       atendimentos: {
         some: {
           status: {
-            in: [StatusAtendimento.AGUARDANDO, StatusAtendimento.EM_SERVICO, StatusAtendimento.PRONTO],
+            in: [
+              StatusAtendimento.AGUARDANDO,
+              StatusAtendimento.EM_SERVICO,
+              StatusAtendimento.PRONTO,
+            ],
           },
         },
       },
@@ -155,7 +170,11 @@ export async function listarVeiculosNaOficina() {
       atendimentos: {
         where: {
           status: {
-            in: [StatusAtendimento.AGUARDANDO, StatusAtendimento.EM_SERVICO, StatusAtendimento.PRONTO],
+            in: [
+              StatusAtendimento.AGUARDANDO,
+              StatusAtendimento.EM_SERVICO,
+              StatusAtendimento.PRONTO,
+            ],
           },
         },
         include: { usuario: { select: { id: true, nome: true } } },

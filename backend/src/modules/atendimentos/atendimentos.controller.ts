@@ -21,30 +21,40 @@ const criarAtendimentoSchema = z.object({
   observacoes: z.string().trim().optional(),
 });
 
-const editarAtendimentoSchema = z.object({
-  veiculoId: z.coerce.number().int().positive().optional(),
-  problemaRelatado: z.string().trim().min(1).optional(),
-  diagnostico: z.string().trim().nullable().optional(),
-  servicoPrevisto: z.string().trim().nullable().optional(),
-  orcamentoValor: z.coerce.number().nonnegative().nullable().optional(),
-  observacoes: z.string().trim().nullable().optional(),
-  status: z.nativeEnum(StatusAtendimento).optional(),
-}).refine((dados) => Object.keys(dados).length > 0);
+const editarAtendimentoSchema = z
+  .object({
+    veiculoId: z.coerce.number().int().positive().optional(),
+    problemaRelatado: z.string().trim().min(1).optional(),
+    diagnostico: z.string().trim().nullable().optional(),
+    servicoPrevisto: z.string().trim().nullable().optional(),
+    servicoRealizado: z.string().trim().nullable().optional(),
+    orcamentoValor: z.coerce.number().nonnegative().nullable().optional(),
+    observacoes: z.string().trim().nullable().optional(),
+    status: z.nativeEnum(StatusAtendimento).optional(),
+  })
+  .refine((dados) => Object.keys(dados).length > 0);
 
-const filtrosAtendimentoSchema = z.object({
-  status: z.nativeEnum(StatusAtendimento).optional(),
-  dataInicio: z.coerce.date().optional(),
-  dataFim: z.coerce.date().optional(),
-  clienteId: z.coerce.number().int().positive().optional(),
-  veiculoId: z.coerce.number().int().positive().optional(),
-}).refine((dados) => !dados.dataInicio || !dados.dataFim || dados.dataInicio <= dados.dataFim);
+const filtrosAtendimentoSchema = z
+  .object({
+    status: z.nativeEnum(StatusAtendimento).optional(),
+    dataInicio: z.coerce.date().optional(),
+    dataFim: z.coerce.date().optional(),
+    clienteId: z.coerce.number().int().positive().optional(),
+    veiculoId: z.coerce.number().int().positive().optional(),
+  })
+  .refine(
+    (dados) =>
+      !dados.dataInicio || !dados.dataFim || dados.dataInicio <= dados.dataFim,
+  );
 
 // Abrir atendimento
 export async function abrirAtendimentoController(req: Request, res: Response) {
   const dados = criarAtendimentoSchema.safeParse(req.body);
 
   if (!dados.success) {
-    return res.status(400).json({ error: "Veículo e problema relatado são obrigatórios" });
+    return res
+      .status(400)
+      .json({ error: "Veículo e problema relatado são obrigatórios" });
   }
 
   try {
@@ -60,7 +70,10 @@ export async function abrirAtendimentoController(req: Request, res: Response) {
 }
 
 // Listar atendimentos e aplicar filtros enviados na query string
-export async function listarAtendimentosController(req: Request, res: Response) {
+export async function listarAtendimentosController(
+  req: Request,
+  res: Response,
+) {
   const filtros = filtrosAtendimentoSchema.safeParse(req.query);
 
   if (!filtros.success) {
@@ -76,7 +89,10 @@ export async function listarAtendimentosController(req: Request, res: Response) 
 }
 
 // Buscar atendimento pelo ID
-export async function buscarAtendimentoPorIdController(req: Request, res: Response) {
+export async function buscarAtendimentoPorIdController(
+  req: Request,
+  res: Response,
+) {
   const id = idSchema.safeParse(req.params.id);
 
   if (!id.success) {
@@ -113,7 +129,10 @@ export async function editarAtendimentoController(req: Request, res: Response) {
     const atendimento = await editarAtendimento(id.data, dados.data);
     return res.status(200).json(atendimento);
   } catch (error) {
-    if (error instanceof Error && error.message === "Atendimento não encontrado") {
+    if (
+      error instanceof Error &&
+      error.message === "Atendimento não encontrado"
+    ) {
       return res.status(404).json({ error: error.message });
     }
     if (error instanceof Error && error.message === "Veículo não encontrado") {
@@ -124,7 +143,10 @@ export async function editarAtendimentoController(req: Request, res: Response) {
 }
 
 // Cancelar atendimento
-export async function cancelarAtendimentoController(req: Request, res: Response) {
+export async function cancelarAtendimentoController(
+  req: Request,
+  res: Response,
+) {
   const id = idSchema.safeParse(req.params.id);
 
   if (!id.success) {
@@ -135,7 +157,10 @@ export async function cancelarAtendimentoController(req: Request, res: Response)
     const atendimento = await cancelarAtendimento(id.data);
     return res.status(200).json(atendimento);
   } catch (error) {
-    if (error instanceof Error && error.message === "Atendimento não encontrado") {
+    if (
+      error instanceof Error &&
+      error.message === "Atendimento não encontrado"
+    ) {
       return res.status(404).json({ error: error.message });
     }
     return res.status(500).json({ error: "Erro ao cancelar atendimento" });
@@ -143,11 +168,16 @@ export async function cancelarAtendimentoController(req: Request, res: Response)
 }
 
 // Listar veículos que têm atendimento em aberto
-export async function listarVeiculosNaOficinaController(_req: Request, res: Response) {
+export async function listarVeiculosNaOficinaController(
+  _req: Request,
+  res: Response,
+) {
   try {
     const veiculos = await listarVeiculosNaOficina();
     return res.status(200).json(veiculos);
   } catch {
-    return res.status(500).json({ error: "Erro ao listar veículos na oficina" });
+    return res
+      .status(500)
+      .json({ error: "Erro ao listar veículos na oficina" });
   }
 }

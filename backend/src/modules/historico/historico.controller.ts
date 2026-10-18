@@ -1,33 +1,104 @@
 import type { Request, Response } from "express";
 import { z } from "zod";
-import { listarHistoricoStatusPorAtendimento } from "./historico.services.js";
+import {
+  listarHistoricoServicosDoCliente,
+  listarHistoricoServicosDoVeiculo,
+  listarHistoricoStatusPorAtendimento,
+} from "./historico.services.js";
 
 const parametrosHistoricoSchema = z.object({
   atendimentoId: z.coerce.number().int().positive(),
 });
 
+const parametrosVeiculoSchema = z.object({
+  veiculoId: z.coerce.number().int().positive(),
+});
+
+const parametrosClienteSchema = z.object({
+  clienteId: z.coerce.number().int().positive(),
+});
+
+const periodoSchema = z
+  .object({
+    dataInicio: z.coerce.date().optional(),
+    dataFim: z.coerce.date().optional(),
+  })
+  .refine(
+    (dados) =>
+      !dados.dataInicio || !dados.dataFim || dados.dataInicio <= dados.dataFim,
+  );
+
+// Histórico de status de um atendimento
 export async function listarHistoricoStatusController(
   req: Request,
   res: Response,
 ) {
-  const resultado = parametrosHistoricoSchema.safeParse(req.params);
+  const parametros = parametrosHistoricoSchema.safeParse(req.params);
 
-  if (!resultado.success) {
-    return res.status(400).json({
-      error: "O atendimentoId deve ser um número inteiro positivo",
-    });
+  if (!parametros.success) {
+    return res.status(400).json({ error: "ID do atendimento inválido" });
   }
 
-  const { atendimentoId } = resultado.data;
+  try {
+    const historico = await listarHistoricoStatusPorAtendimento(
+      parametros.data.atendimentoId,
+    );
+    return res.status(200).json(historico);
+  } catch {
+    return res
+      .status(500)
+      .json({ error: "Erro ao listar histórico de status" });
+  }
+}
+
+// Histórico de atendimentos de um veículo
+export async function listarHistoricoServicosDoVeiculoController(
+  req: Request,
+  res: Response,
+) {
+  const parametros = parametrosVeiculoSchema.safeParse(req.params);
+  const periodo = periodoSchema.safeParse(req.query);
+
+  if (!parametros.success || !periodo.success) {
+    return res.status(400).json({ error: "Parâmetros inválidos" });
+  }
 
   try {
-    const historicoStatus =
-      await listarHistoricoStatusPorAtendimento(atendimentoId);
-
-    return res.status(200).json(historicoStatus);
+    const historico = await listarHistoricoServicosDoVeiculo(
+      parametros.data.veiculoId,
+      periodo.data.dataInicio,
+      periodo.data.dataFim,
+    );
+    return res.status(200).json(historico);
   } catch {
-    return res.status(500).json({
-      error: "Erro ao listar histórico de status",
-    });
+    return res
+      .status(500)
+      .json({ error: "Erro ao listar histórico do veículo" });
+  }
+}
+
+// Histórico de atendimentos de um cliente
+export async function listarHistoricoServicosDoClienteController(
+  req: Request,
+  res: Response,
+) {
+  const parametros = parametrosClienteSchema.safeParse(req.params);
+  const periodo = periodoSchema.safeParse(req.query);
+
+  if (!parametros.success || !periodo.success) {
+    return res.status(400).json({ error: "Parâmetros inválidos" });
+  }
+
+  try {
+    const historico = await listarHistoricoServicosDoCliente(
+      parametros.data.clienteId,
+      periodo.data.dataInicio,
+      periodo.data.dataFim,
+    );
+    return res.status(200).json(historico);
+  } catch {
+    return res
+      .status(500)
+      .json({ error: "Erro ao listar histórico do cliente" });
   }
 }

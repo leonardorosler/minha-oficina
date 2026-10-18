@@ -11,7 +11,10 @@ import {
 export const atendimentosRouter = Router();
 
 atendimentosRouter.post("/", abrirAtendimentoController);
-atendimentosRouter.get("/veiculos-na-oficina", listarVeiculosNaOficinaController);
+atendimentosRouter.get(
+  "/veiculos-na-oficina",
+  listarVeiculosNaOficinaController,
+);
 atendimentosRouter.get("/", listarAtendimentosController);
 atendimentosRouter.get("/:id", buscarAtendimentoPorIdController);
 atendimentosRouter.put("/:id", editarAtendimentoController);
