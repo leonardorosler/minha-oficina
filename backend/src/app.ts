@@ -8,9 +8,10 @@ import { veiculosRouter } from "./modules/veiculos/veiculos.routes.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
 import { atendimentosRouter } from "./modules/atendimentos/atendimentos.routes.js";
 import { authMiddleware } from "./modules/middleware/auth.middleware.js";
+import { dashboardRouter } from "./modules/dashboard/dashboard.routes.js";
 
 export const app = express();
-
+app.use("/dashboard", authMiddleware, dashboardRouter);
 app.use(cors());
 app.use(express.json());
 

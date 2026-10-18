@@ -1,9 +1,23 @@
 import { Router } from "express";
-import { listarHistoricoStatusController } from "./historico.controller.js";
+import {
+  listarHistoricoServicosDoClienteController,
+  listarHistoricoServicosDoVeiculoController,
+  listarHistoricoStatusController,
+} from "./historico.controller.js";
 
 export const historicoRouter = Router();
 
 historicoRouter.get(
   "/atendimentos/:atendimentoId/status",
   listarHistoricoStatusController,
+);
+
+historicoRouter.get(
+  "/veiculos/:veiculoId/atendimentos",
+  listarHistoricoServicosDoVeiculoController,
+);
+
+historicoRouter.get(
+  "/clientes/:clienteId/atendimentos",
+  listarHistoricoServicosDoClienteController,
 );

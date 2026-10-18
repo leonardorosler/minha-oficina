@@ -70,6 +70,7 @@ model Atendimento {
   problemaRelatado String            @map("problema_relatado")
   diagnostico      String?
   servicoPrevisto  String?           @map("servico_previsto")
+  servicoRealizado String?           @map("servico_realizado")
   orcamentoValor   Decimal?          @map("orcamento_valor") @db.Decimal(10, 2)
   observacoes      String?
   status           StatusAtendimento @default(AGUARDANDO)
