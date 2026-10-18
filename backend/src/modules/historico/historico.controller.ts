@@ -28,6 +28,14 @@ const periodoSchema = z
       !dados.dataInicio || !dados.dataFim || dados.dataInicio <= dados.dataFim,
   );
 
+function ajustarDataFim(dataFim: Date | undefined, valor: unknown) {
+  if (dataFim && typeof valor === "string" && /^\d{4}-\d{2}-\d{2}$/.test(valor)) {
+    dataFim.setUTCHours(23, 59, 59, 999);
+  }
+
+  return dataFim;
+}
+
 // Histórico de status de um atendimento
 export async function listarHistoricoStatusController(
   req: Request,
@@ -67,7 +75,7 @@ export async function listarHistoricoServicosDoVeiculoController(
     const historico = await listarHistoricoServicosDoVeiculo(
       parametros.data.veiculoId,
       periodo.data.dataInicio,
-      periodo.data.dataFim,
+      ajustarDataFim(periodo.data.dataFim, req.query.dataFim),
     );
     return res.status(200).json(historico);
   } catch {
@@ -93,7 +101,7 @@ export async function listarHistoricoServicosDoClienteController(
     const historico = await listarHistoricoServicosDoCliente(
       parametros.data.clienteId,
       periodo.data.dataInicio,
-      periodo.data.dataFim,
+      ajustarDataFim(periodo.data.dataFim, req.query.dataFim),
     );
     return res.status(200).json(historico);
   } catch {

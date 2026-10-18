@@ -20,6 +20,14 @@ export async function buscarDadosDashboardController(
     return res.status(400).json({ error: "Data inválida" });
   }
 
+  if (
+    dataFim &&
+    typeof req.query.dataFim === "string" &&
+    /^\d{4}-\d{2}-\d{2}$/.test(req.query.dataFim)
+  ) {
+    dataFim.setUTCHours(23, 59, 59, 999);
+  }
+
   if (dataInicio && dataFim && dataInicio > dataFim) {
     return res.status(400).json({
       error: "A data inicial deve vir antes da data final",

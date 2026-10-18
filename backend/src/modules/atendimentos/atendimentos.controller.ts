@@ -47,6 +47,14 @@ const filtrosAtendimentoSchema = z
       !dados.dataInicio || !dados.dataFim || dados.dataInicio <= dados.dataFim,
   );
 
+function ajustarDataFim(dataFim: Date | undefined, valor: unknown) {
+  if (dataFim && typeof valor === "string" && /^\d{4}-\d{2}-\d{2}$/.test(valor)) {
+    dataFim.setUTCHours(23, 59, 59, 999);
+  }
+
+  return dataFim;
+}
+
 // Abrir atendimento
 export async function abrirAtendimentoController(req: Request, res: Response) {
   const dados = criarAtendimentoSchema.safeParse(req.body);
@@ -81,7 +89,10 @@ export async function listarAtendimentosController(
   }
 
   try {
-    const atendimentos = await listarAtendimentos(filtros.data);
+    const atendimentos = await listarAtendimentos({
+      ...filtros.data,
+      dataFim: ajustarDataFim(filtros.data.dataFim, req.query.dataFim),
+    });
     return res.status(200).json(atendimentos);
   } catch {
     return res.status(500).json({ error: "Erro ao listar atendimentos" });
