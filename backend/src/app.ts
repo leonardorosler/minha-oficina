@@ -7,6 +7,7 @@ import { usuariosRouter } from "./modules/usuarios/usuarios.routes.js";
 import { veiculosRouter } from "./modules/veiculos/veiculos.routes.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
 import { atendimentosRouter } from "./modules/atendimentos/atendimentos.routes.js";
+import { fluxoAtendimentoRouter } from "./modules/fluxo-atendimento/fluxo-atendimento.routes.js";
 import { authMiddleware } from "./modules/middleware/auth.middleware.js";
 import { dashboardRouter } from "./modules/dashboard/dashboard.routes.js";
 
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use("/auth", authRouter);
 
 app.use("/atendimentos", authMiddleware, atendimentosRouter);
+app.use("/fluxo-atendimento", authMiddleware, fluxoAtendimentoRouter);
 app.use("/historico", authMiddleware, historicoRouter);
 app.use("/clientes", authMiddleware, clientesRouter);
 app.use("/usuarios", authMiddleware, usuariosRouter);

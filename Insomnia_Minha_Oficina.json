@@ -1,0 +1,1143 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-10-25T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "wrk_minha_oficina",
+      "parentId": null,
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "Minha Oficina API",
+      "description": "Collection para testar API da Minha Oficina",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_minha_oficina",
+      "parentId": "wrk_minha_oficina",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000",
+        "token": "",
+        "usuario_id": "",
+        "cliente_id": "",
+        "veiculo_id": "",
+        "atendimento_id": ""
+      },
+      "dataPropertyOrder": null,
+      "_type": "environment"
+    },
+    {
+      "_id": "grp_auth",
+      "parentId": "wrk_minha_oficina",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "🔐 Autenticação",
+      "description": "Login e usuário logado",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_login",
+      "parentId": "grp_auth",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "POST /auth/login",
+      "description": "Fazer login e obter token",
+      "method": "POST",
+      "url": "{{ _.base_url }}/auth/login",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"admin@oficina.com\",\n  \"senha\": \"123456\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1700000000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_me",
+      "parentId": "grp_auth",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /auth/me",
+      "description": "Obter dados do usuário logado",
+      "method": "GET",
+      "url": "{{ _.base_url }}/auth/me",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699999000000,
+      "_type": "request"
+    },
+    {
+      "_id": "grp_usuarios",
+      "parentId": "wrk_minha_oficina",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "👥 Usuários",
+      "description": "CRUD de usuários",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_criar_usuario",
+      "parentId": "grp_usuarios",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "POST /usuarios",
+      "description": "Cadastrar novo usuário",
+      "method": "POST",
+      "url": "{{ _.base_url }}/usuarios",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"João Silva\",\n  \"email\": \"joao@oficina.com\",\n  \"senha\": \"123456\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1699998000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_listar_usuarios",
+      "parentId": "grp_usuarios",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /usuarios",
+      "description": "Listar todos os usuários",
+      "method": "GET",
+      "url": "{{ _.base_url }}/usuarios",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699997000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_buscar_usuario",
+      "parentId": "grp_usuarios",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /usuarios/:id",
+      "description": "Buscar usuário por ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/usuarios/{{ _.usuario_id }}",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699996000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_editar_usuario",
+      "parentId": "grp_usuarios",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "PATCH /usuarios/:id",
+      "description": "Editar usuário",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/usuarios/{{ _.usuario_id }}",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"João Silva Atualizado\",\n  \"email\": \"joao.novo@oficina.com\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1699995000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_desativar_usuario",
+      "parentId": "grp_usuarios",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "PATCH /usuarios/:id/desativar",
+      "description": "Desativar usuário",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/usuarios/{{ _.usuario_id }}/desativar",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699994000000,
+      "_type": "request"
+    },
+    {
+      "_id": "grp_clientes",
+      "parentId": "wrk_minha_oficina",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "👤 Clientes",
+      "description": "CRUD de clientes e relacionamentos",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_criar_cliente",
+      "parentId": "grp_clientes",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "POST /clientes",
+      "description": "Cadastrar novo cliente",
+      "method": "POST",
+      "url": "{{ _.base_url }}/clientes",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Maria Santos\",\n  \"telefone\": \"(11) 99999-8888\",\n  \"email\": \"maria@email.com\",\n  \"cpf\": \"123.456.789-00\",\n  \"endereco\": \"Rua das Flores, 123\",\n  \"observacoes\": \"Cliente VIP\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1699993000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_listar_clientes",
+      "parentId": "grp_clientes",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /clientes",
+      "description": "Listar todos os clientes",
+      "method": "GET",
+      "url": "{{ _.base_url }}/clientes",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699992000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_buscar_cliente_cpf",
+      "parentId": "grp_clientes",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /clientes/cpf/:cpf",
+      "description": "Buscar cliente por CPF",
+      "method": "GET",
+      "url": "{{ _.base_url }}/clientes/cpf/123.456.789-00",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699991000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_buscar_cliente",
+      "parentId": "grp_clientes",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /clientes/:id",
+      "description": "Buscar cliente por ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/clientes/{{ _.cliente_id }}",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699990000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_veiculos_cliente",
+      "parentId": "grp_clientes",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /clientes/:id/veiculos",
+      "description": "Listar veículos do cliente",
+      "method": "GET",
+      "url": "{{ _.base_url }}/clientes/{{ _.cliente_id }}/veiculos",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699989000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_atendimentos_cliente",
+      "parentId": "grp_clientes",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /clientes/:id/atendimentos",
+      "description": "Listar atendimentos do cliente",
+      "method": "GET",
+      "url": "{{ _.base_url }}/clientes/{{ _.cliente_id }}/atendimentos",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699988000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_atualizar_cliente",
+      "parentId": "grp_clientes",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "PUT /clientes/:id",
+      "description": "Atualizar cliente",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/clientes/{{ _.cliente_id }}",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Maria Santos Atualizada\",\n  \"telefone\": \"(11) 98888-7777\",\n  \"email\": \"maria.nova@email.com\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1699987000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_deletar_cliente",
+      "parentId": "grp_clientes",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "DELETE /clientes/:id",
+      "description": "Deletar cliente",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/clientes/{{ _.cliente_id }}",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699986000000,
+      "_type": "request"
+    },
+    {
+      "_id": "grp_veiculos",
+      "parentId": "wrk_minha_oficina",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "🚗 Veículos",
+      "description": "CRUD de veículos",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_criar_veiculo",
+      "parentId": "grp_veiculos",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "POST /veiculos",
+      "description": "Cadastrar novo veículo",
+      "method": "POST",
+      "url": "{{ _.base_url }}/veiculos",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"clienteId\": {{ _.cliente_id }},\n  \"placa\": \"ABC-1234\",\n  \"marca\": \"Toyota\",\n  \"modelo\": \"Corolla\",\n  \"ano\": 2022,\n  \"cor\": \"Prata\",\n  \"observacoes\": \"Veículo em bom estado\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1699985000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_listar_veiculos",
+      "parentId": "grp_veiculos",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /veiculos",
+      "description": "Listar todos os veículos",
+      "method": "GET",
+      "url": "{{ _.base_url }}/veiculos",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699984000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_buscar_veiculo_placa",
+      "parentId": "grp_veiculos",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /veiculos/placa/:placa",
+      "description": "Buscar veículo por placa",
+      "method": "GET",
+      "url": "{{ _.base_url }}/veiculos/placa/ABC-1234",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699983000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_buscar_veiculo",
+      "parentId": "grp_veiculos",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /veiculos/:id",
+      "description": "Buscar veículo por ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/veiculos/{{ _.veiculo_id }}",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699982000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_atendimentos_veiculo",
+      "parentId": "grp_veiculos",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /veiculos/:id/atendimentos",
+      "description": "Listar atendimentos do veículo",
+      "method": "GET",
+      "url": "{{ _.base_url }}/veiculos/{{ _.veiculo_id }}/atendimentos",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699981000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_atualizar_veiculo",
+      "parentId": "grp_veiculos",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "PUT /veiculos/:id",
+      "description": "Atualizar veículo",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/veiculos/{{ _.veiculo_id }}",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"marca\": \"Honda\",\n  \"modelo\": \"Civic\",\n  \"ano\": 2023,\n  \"cor\": \"Preto\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1699980000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_deletar_veiculo",
+      "parentId": "grp_veiculos",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "DELETE /veiculos/:id",
+      "description": "Deletar veículo",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/veiculos/{{ _.veiculo_id }}",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699979000000,
+      "_type": "request"
+    },
+    {
+      "_id": "grp_atendimentos",
+      "parentId": "wrk_minha_oficina",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "🔧 Atendimentos",
+      "description": "CRUD de atendimentos",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_criar_atendimento",
+      "parentId": "grp_atendimentos",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "POST /atendimentos",
+      "description": "Abrir novo atendimento",
+      "method": "POST",
+      "url": "{{ _.base_url }}/atendimentos",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"veiculoId\": {{ _.veiculo_id }},\n  \"problemaRelatado\": \"Barulho no motor\",\n  \"diagnostico\": \"Correia dentada gasta\",\n  \"servicoPrevisto\": \"Troca de correia dentada\",\n  \"orcamentoValor\": 800.00,\n  \"observacoes\": \"Cliente autorizou orçamento\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1699978000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_listar_atendimentos",
+      "parentId": "grp_atendimentos",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /atendimentos",
+      "description": "Listar atendimentos com filtros",
+      "method": "GET",
+      "url": "{{ _.base_url }}/atendimentos",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "status",
+          "value": "",
+          "description": "AGUARDANDO, EM_SERVICO, PRONTO, FINALIZADO, CANCELADO"
+        },
+        {
+          "name": "dataInicio",
+          "value": "",
+          "description": "YYYY-MM-DD"
+        },
+        {
+          "name": "dataFim",
+          "value": "",
+          "description": "YYYY-MM-DD"
+        },
+        {
+          "name": "clienteId",
+          "value": "",
+          "description": "ID do cliente"
+        },
+        {
+          "name": "veiculoId",
+          "value": "",
+          "description": "ID do veículo"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699977000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_veiculos_oficina",
+      "parentId": "grp_atendimentos",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /atendimentos/veiculos-na-oficina",
+      "description": "Listar veículos com atendimento em aberto",
+      "method": "GET",
+      "url": "{{ _.base_url }}/atendimentos/veiculos-na-oficina",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699976000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_buscar_atendimento",
+      "parentId": "grp_atendimentos",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /atendimentos/:id",
+      "description": "Buscar atendimento por ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/atendimentos/{{ _.atendimento_id }}",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699975000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_editar_atendimento",
+      "parentId": "grp_atendimentos",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "PUT /atendimentos/:id",
+      "description": "Editar atendimento",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/atendimentos/{{ _.atendimento_id }}",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"diagnostico\": \"Correia dentada gasta + tensor\",\n  \"servicoPrevisto\": \"Troca de correia dentada e tensor\",\n  \"orcamentoValor\": 950.00,\n  \"servicoRealizado\": \"Troca realizada com sucesso\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1699974000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_cancelar_atendimento",
+      "parentId": "grp_atendimentos",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "PATCH /atendimentos/:id/cancelar",
+      "description": "Cancelar atendimento",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/atendimentos/{{ _.atendimento_id }}/cancelar",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699973000000,
+      "_type": "request"
+    },
+    {
+      "_id": "grp_fluxo",
+      "parentId": "wrk_minha_oficina",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "🔄 Fluxo de Atendimento (Novo)",
+      "description": "Controle de status: AGUARDANDO → EM_SERVICO → PRONTO → FINALIZADO",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_alterar_status",
+      "parentId": "grp_fluxo",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "PATCH /fluxo-atendimento/:id/status",
+      "description": "Alterar status seguindo o fluxo válido",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/status",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"statusNovo\": \"EM_SERVICO\",\n  \"observacao\": \"Iniciando reparo do motor\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1699972000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_fluxo_completo",
+      "parentId": "grp_fluxo",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /fluxo-atendimento/:id/fluxo",
+      "description": "Ver fluxo completo com histórico e transições possíveis",
+      "method": "GET",
+      "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/fluxo",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699971000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_transicoes_possiveis",
+      "parentId": "grp_fluxo",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /fluxo-atendimento/:id/transicoes",
+      "description": "Ver transições possíveis do status atual",
+      "method": "GET",
+      "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/transicoes",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699970000000,
+      "_type": "request"
+    },
+    {
+      "_id": "grp_historico",
+      "parentId": "wrk_minha_oficina",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "📜 Histórico",
+      "description": "Consultas de histórico de status e serviços",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_historico_status",
+      "parentId": "grp_historico",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /historico/atendimentos/:atendimentoId/status",
+      "description": "Histórico de status de um atendimento",
+      "method": "GET",
+      "url": "{{ _.base_url }}/historico/atendimentos/{{ _.atendimento_id }}/status",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699969000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_historico_veiculo",
+      "parentId": "grp_historico",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /historico/veiculos/:veiculoId/atendimentos",
+      "description": "Histórico de atendimentos do veículo",
+      "method": "GET",
+      "url": "{{ _.base_url }}/historico/veiculos/{{ _.veiculo_id }}/atendimentos",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "dataInicio",
+          "value": "",
+          "description": "YYYY-MM-DD"
+        },
+        {
+          "name": "dataFim",
+          "value": "",
+          "description": "YYYY-MM-DD"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699968000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_historico_cliente",
+      "parentId": "grp_historico",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /historico/clientes/:clienteId/atendimentos",
+      "description": "Histórico de atendimentos do cliente",
+      "method": "GET",
+      "url": "{{ _.base_url }}/historico/clientes/{{ _.cliente_id }}/atendimentos",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "dataInicio",
+          "value": "",
+          "description": "YYYY-MM-DD"
+        },
+        {
+          "name": "dataFim",
+          "value": "",
+          "description": "YYYY-MM-DD"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699967000000,
+      "_type": "request"
+    },
+    {
+      "_id": "grp_dashboard",
+      "parentId": "wrk_minha_oficina",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "📊 Dashboard",
+      "description": "Dados do painel principal",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_dashboard",
+      "parentId": "grp_dashboard",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "GET /dashboard",
+      "description": "Buscar dados do dashboard",
+      "method": "GET",
+      "url": "{{ _.base_url }}/dashboard",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699966000000,
+      "_type": "request"
+    },
+    {
+      "_id": "grp_fluxo_completo_teste",
+      "parentId": "wrk_minha_oficina",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "🧪 Teste Fluxo Completo",
+      "description": "Sequência para testar o fluxo completo: AGUARDANDO → EM_SERVICO → PRONTO → FINALIZADO",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_teste_1_criar",
+      "parentId": "grp_fluxo_completo_teste",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "1️⃣ Criar Cliente + Veículo + Atendimento",
+      "description": "Criar dados base para teste",
+      "method": "POST",
+      "url": "{{ _.base_url }}/clientes",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Cliente Teste Fluxo\",\n  \"telefone\": \"(11) 91234-5678\",\n  \"email\": \"teste.fluxo@email.com\",\n  \"cpf\": \"987.654.321-00\",\n  \"endereco\": \"Av. Teste, 999\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1699965000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_teste_2_veiculo",
+      "parentId": "grp_fluxo_completo_teste",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "2️⃣ Criar Veículo",
+      "description": "Criar veículo para o cliente",
+      "method": "POST",
+      "url": "{{ _.base_url }}/veiculos",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"clienteId\": {{ _.cliente_id }},\n  \"placa\": \"TEST-0001\",\n  \"marca\": \"Ford\",\n  \"modelo\": \"Ka\",\n  \"ano\": 2020,\n  \"cor\": \"Branco\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1699964000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_teste_3_atendimento",
+      "parentId": "grp_fluxo_completo_teste",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "3️⃣ Abrir Atendimento (AGUARDANDO)",
+      "description": "Criar atendimento - status inicial AGUARDANDO",
+      "method": "POST",
+      "url": "{{ _.base_url }}/atendimentos",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"veiculoId\": {{ _.veiculo_id }},\n  \"problemaRelatado\": \"Teste fluxo completo\",\n  \"diagnostico\": \"Teste\",\n  \"servicoPrevisto\": \"Teste fluxo\",\n  \"orcamentoValor\": 100.00\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1699963000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_teste_4_aguardando_para_em_servico",
+      "parentId": "grp_fluxo_completo_teste",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "4️⃣ AGUARDANDO → EM_SERVICO",
+      "description": "Mover para EM_SERVICO",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/status",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"statusNovo\": \"EM_SERVICO\",\n  \"observacao\": \"Iniciando serviço\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1699962000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_teste_5_em_servico_para_pronto",
+      "parentId": "grp_fluxo_completo_teste",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "5️⃣ EM_SERVICO → PRONTO",
+      "description": "Mover para PRONTO",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/status",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"statusNovo\": \"PRONTO\",\n  \"observacao\": \"Serviço concluído, aguardando retirada\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1699961000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_teste_6_pronto_para_finalizado",
+      "parentId": "grp_fluxo_completo_teste",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "6️⃣ PRONTO → FINALIZADO",
+      "description": "Finalizar atendimento (define dataSaida)",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/status",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"statusNovo\": \"FINALIZADO\",\n  \"observacao\": \"Cliente retirou veículo, pagamento confirmado\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1699960000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_teste_7_ver_fluxo",
+      "parentId": "grp_fluxo_completo_teste",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "7️⃣ Ver Fluxo Completo",
+      "description": "Visualizar histórico completo de transições",
+      "method": "GET",
+      "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/fluxo",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699959000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_teste_8_tentar_alterar_finalizado",
+      "parentId": "grp_fluxo_completo_teste",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "8️⃣ Tentar Alterar FINALIZADO (Deve Falhar)",
+      "description": "Testar bloqueio de alteração em FINALIZADO",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/status",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"statusNovo\": \"EM_SERVICO\",\n  \"observacao\": \"Tentativa inválida\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1699958000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_teste_9_transicao_invalida",
+      "parentId": "grp_fluxo_completo_teste",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "9️⃣ Transição Inválida (Deve Falhar)",
+      "description": "Testar AGUARDANDO → PRONTO (pular EM_SERVICO)",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/status",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"statusNovo\": \"PRONTO\",\n  \"observacao\": \"Tentativa de pular etapa\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1699957000000,
+      "_type": "request"
+    }
+  ]
+}
