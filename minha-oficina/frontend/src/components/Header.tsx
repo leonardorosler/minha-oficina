@@ -4,6 +4,7 @@
  */
 
 import { Icon, type NomeIcone } from './Icon';
+import { BrandMark } from './Brand';
 
 interface HeaderProps {
   titulo: string;
@@ -38,7 +39,7 @@ export function Header({
       )}
       
       <div className="title-wrap">
-        <span className="kicker">MINHA OFICINA</span>
+        <span className="kicker"><BrandMark tamanho={15} className="kicker-mark" /> MINHA OFICINA</span>
         <h2>{titulo}</h2>
       </div>
 

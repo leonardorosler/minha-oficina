@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { mensagemErro } from '../../services/api';
+import { BrandLogo } from '../Brand';
 import { Icon } from '../Icon';
 
 export function Login() {
@@ -11,6 +12,7 @@ export function Login() {
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
   const [entrando, setEntrando] = useState(false);
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const enviar = async (evento: React.FormEvent) => {
     evento.preventDefault();
@@ -27,46 +29,73 @@ export function Login() {
 
   return (
     <div className="login-screen">
-      <div className="login-brand">
-        <span className="login-logo"><Icon nome="car" /></span>
-        <h1>Minha Oficina</h1>
+      <div className="login-topo">
+        <div className="login-decor decor-a" />
+        <div className="login-decor decor-b" />
+        <BrandLogo tamanho={58} />
         <p>Gestão simples e organizada para oficinas mecânicas.</p>
       </div>
 
-      <form className="form-stack" onSubmit={enviar}>
-        <div className="field">
-          <label htmlFor="email">E-mail</label>
-          <input
-            id="email"
-            type="email"
-            autoComplete="username"
-            placeholder="seu@email.com"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="field">
-          <label htmlFor="senha">Senha</label>
-          <input
-            id="senha"
-            type="password"
-            autoComplete="current-password"
-            placeholder="Sua senha"
-            value={senha}
-            onChange={e => setSenha(e.target.value)}
-            required
-          />
+      <form className="login-cartao" onSubmit={enviar}>
+        <div className="login-cabecalho">
+          <span className="login-icone"><Icon nome="shield" /></span>
+          <div>
+            <h2>Bem-vindo de volta</h2>
+            <p>Entre com sua conta para continuar</p>
+          </div>
         </div>
 
-        {erro && <p className="erro-texto">{erro}</p>}
+        <div className="form-stack">
+          <div className="field">
+            <label htmlFor="email">E-mail</label>
+            <div className="campo-com-icone">
+              <Icon nome="userCircle" />
+              <input
+                id="email"
+                type="email"
+                autoComplete="username"
+                placeholder="seu@email.com"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+              />
+            </div>
+          </div>
 
-        <button type="submit" className="primary full" disabled={entrando}>
-          {entrando ? 'Entrando...' : 'Entrar'}
-        </button>
+          <div className="field">
+            <label htmlFor="senha">Senha</label>
+            <div className="campo-com-icone">
+              <Icon nome="shield" />
+              <input
+                id="senha"
+                type={mostrarSenha ? 'text' : 'password'}
+                autoComplete="current-password"
+                placeholder="Sua senha"
+                value={senha}
+                onChange={e => setSenha(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                className="campo-acao"
+                onClick={() => setMostrarSenha(v => !v)}
+                aria-label={mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'}
+              >
+                {mostrarSenha ? 'Ocultar' : 'Ver'}
+              </button>
+            </div>
+          </div>
+
+          {erro && <p className="erro-texto">{erro}</p>}
+
+          <button type="submit" className="primary full botao-entrar" disabled={entrando}>
+            {entrando ? 'Entrando...' : 'Entrar na oficina'}
+            {!entrando && <Icon nome="chevron" />}
+          </button>
+        </div>
       </form>
 
-      <p className="login-rodape">Acesso restrito à equipe da oficina</p>
+      <p className="login-rodape"><Icon nome="shield" /> Acesso restrito à equipe da oficina</p>
     </div>
   );
 }
