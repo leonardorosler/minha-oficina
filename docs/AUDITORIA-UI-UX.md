@@ -125,7 +125,25 @@ Péssima em 320px: filtros de período e resumo são cortados (ACH-02, ACH-06). 
 
 ---
 
-## 6. Metodologia e Limitações
+## 6. Status das correções (atualizado após a auditoria)
+
+Os achados abaixo foram corrigidos e validados em produção:
+
+| Achado | Status | Correção aplicada |
+|---|---|---|
+| ACH-01 | ✅ Corrigido | Modal com `max-height: 84%`, `padding-bottom` maior e rolagem isolada; último cliente fica totalmente visível ao rolar |
+| ACH-02 / ACH-06 | ✅ Corrigido | Em telas ≤380px os filtros de período quebram em duas linhas e o resumo não é mais cortado |
+| ACH-03 | ✅ Corrigido | Rodapé do login com 16px e cor `#445267` |
+| ACH-04 | ✅ Corrigido | Linhas do detalhe da OS empilhadas (rótulo acima do valor), sem truncamento |
+| ACH-05 | ✅ Corrigido | Campo Veículo desabilitado com borda tracejada, fundo cinza e seta esmaecida |
+| ACH-07 | ✅ Corrigido | Avatar do painel agora mostra "Perfil" abaixo das iniciais |
+| ACH-08 | ✅ Corrigido | Telefones e CPFs com 15,7px e cor mais escura |
+| ACH-10 | ✅ Corrigido | Pílulas de status com 14,7px e mais padding |
+| ACH-13 | ✅ Corrigido | Botão "Ver senha" ampliado |
+| ACH-11 | ⚠️ Decisão de design | Rótulos da barra inferior permanecem visíveis apenas no item ativo, conforme o padrão Instagram solicitado; ícones e alvos de toque foram ampliados |
+| ACH-09, ACH-12, ACH-14 a ACH-21 | 📌 Backlog | Polimento restante (seta do veículo, reforço do "Sair", textos auxiliares) |
+
+## 7. Metodologia e Limitações
 
 - A avaliação baseou-se exclusivamente nas 12 capturas de tela fornecidas, sem acesso ao código-fonte, componentes ou testes automatizados.
 - Não foram executados testes de contraste automatizados nem de leitor de tela; as classificações de contraste são estimativas visuais.
