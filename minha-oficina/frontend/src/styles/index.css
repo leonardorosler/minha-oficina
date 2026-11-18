@@ -124,8 +124,8 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
   color: var(--brand);
 }
 .icon-button {
-  width: 46px; height: 46px;
-  border-radius: 14px;
+  width: 52px; height: 52px;
+  border-radius: 16px;
   border: 1px solid var(--line);
   background: var(--card);
   color: var(--brand);
@@ -147,11 +147,11 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 
 /* Botoes */
 .primary, .secondary, .ghost {
-  min-height: 52px;
-  border-radius: 14px;
+  min-height: 58px;
+  border-radius: 16px;
   font-weight: 800;
-  font-size: 1rem;
-  padding: 0 18px;
+  font-size: 1.06rem;
+  padding: 0 20px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -173,7 +173,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 
 /* Busca */
 .search {
-  height: 54px;
+  height: 60px;
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: 15px;
@@ -199,7 +199,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--raio);
-  padding: 16px;
+  padding: 18px;
   box-shadow: var(--sombra);
 }
 .click-card { width: 100%; text-align: left; color: inherit; transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease; }
@@ -216,7 +216,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 .stats { grid-template-columns: 1fr 1fr; }
 .stat {
   display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 6px;
-  min-height: 112px;
+  min-height: 122px;
   position: relative;
   overflow: hidden;
 }
@@ -298,8 +298,9 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 .field label { font-size: .92rem; font-weight: 800; color: var(--brand); }
 .field input, .field textarea, .field select {
   width: 100%; border: 1px solid var(--line);
-  border-radius: 13px; background: var(--card);
-  padding: 14px; color: var(--ink); outline: none; font-size: 1rem;
+  border-radius: 14px; background: var(--card);
+  padding: 16px; color: var(--ink); outline: none; font-size: 1.05rem;
+  min-height: 56px;
   transition: border-color .15s ease, box-shadow .15s ease;
 }
 .field textarea { min-height: 86px; resize: vertical; }
@@ -348,7 +349,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 .tab {
   border: 1px solid var(--line); background: var(--card);
   color: var(--muted); border-radius: 99px;
-  padding: 11px 16px; font-size: .9rem; font-weight: 800; white-space: nowrap;
+  padding: 13px 20px; font-size: 1rem; font-weight: 800; white-space: nowrap;
   transition: all .15s ease;
 }
 .tab:hover { border-color: var(--primary); color: var(--primary-dark); }
@@ -357,6 +358,17 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 /* Detalhe */
 .detail-top { display: grid; gap: 9px; border-top: 4px solid var(--primary); }
 .detail-top h3 { font-size: 1.35rem; margin: 4px 0 0; color: var(--brand); }
+/* Simplificacao visual: acoes secundarias discretas */
+.hero-historico { margin-top: 10px; padding-left: 0; }
+.link-buttonperigo {
+  justify-self: start;
+  margin-top: 8px;
+  border: 0; background: transparent;
+  color: var(--danger); font-weight: 800; font-size: .95rem;
+  padding: 10px 4px;
+}
+.link-buttonperigo:hover { text-decoration: underline; }
+
 .timeline { list-style: none; margin: 0; padding: 0 0 0 30px; border-left: 2px solid var(--line); }
 .timeline li { position: relative; padding: 0 0 18px 10px; font-weight: 700; color: var(--muted); }
 .timeline li::before {
@@ -369,6 +381,15 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 .timeline time { display: block; color: var(--muted); font-size: .82rem; font-weight: 600; margin-top: 3px; }
 .card.danger { border-color: #fecaca; background: var(--danger-tint); }
 .card.danger p { color: var(--danger); }
+.detalhe-info { display: grid; gap: 0; padding: 6px 18px; }
+.detalhe-linha {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  padding: 14px 0; border-bottom: 1px solid var(--line);
+}
+.detalhe-linha:last-child { border-bottom: 0; }
+.detalhe-linha span { color: var(--muted); font-size: .88rem; font-weight: 700; flex: 0 0 auto; }
+.detalhe-linha strong { color: var(--ink); font-size: .98rem; text-align: right; font-weight: 700; }
+
 .historico-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .historico-item strong { color: var(--brand); }
 
@@ -396,13 +417,13 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 .bottom-nav {
   position: relative;
   flex: 0 0 auto;
-  height: 96px;
+  height: 104px;
   background: var(--card);
   border-top: 1px solid var(--line);
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   align-items: start;
-  padding-top: 12px;
+  padding-top: 14px;
   padding-bottom: env(safe-area-inset-bottom);
   z-index: 5;
   box-shadow: 0 -6px 22px rgba(15,42,67,.05);
@@ -410,8 +431,8 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 .nav-item {
   border: 0; background: transparent; color: #8794a6;
   display: grid; justify-items: center; gap: 5px;
-  font-size: .76rem; font-weight: 800;
-  padding: 0; min-height: 58px;
+  font-size: .8rem; font-weight: 800;
+  padding: 0; min-height: 64px;
   transition: color .15s ease;
 }
 .nav-item.active { color: var(--primary-dark); }
@@ -463,10 +484,11 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 .option-list { display: grid; gap: 8px; }
 .option {
   display: flex; align-items: center; gap: 11px;
-  width: 100%; text-align: left; padding: 14px;
-  border: 1px solid var(--line); border-radius: 13px;
+  width: 100%; text-align: left; padding: 16px;
+  min-height: 64px;
+  border: 1px solid var(--line); border-radius: 14px;
   background: var(--card); color: var(--ink);
-  font-weight: 700; font-size: .98rem;
+  font-weight: 700; font-size: 1.05rem;
   transition: all .15s ease;
 }
 .option:hover { border-color: var(--primary); background: var(--secondary); }
@@ -481,7 +503,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 
 /* Toast */
 .toast {
-  position: absolute; left: 18px; right: 18px; bottom: 108px;
+  position: absolute; left: 18px; right: 18px; bottom: 116px;
   padding: 14px 16px; border-radius: 14px;
   background: var(--brand); color: #fff;
   border-left: 4px solid var(--brand-mark);

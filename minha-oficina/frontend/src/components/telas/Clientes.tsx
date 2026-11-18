@@ -1,4 +1,4 @@
-/** Lista de clientes com cadastro, edição, exclusão e busca por CPF */
+/** Lista de clientes com cadastro e busca por CPF */
 
 import { useState } from 'react';
 import { Header } from '../Header';
@@ -9,14 +9,11 @@ import { Carregando, ErroApi, Vazio } from '../Estados';
 import { clientes as api } from '../../services/endpoints';
 import { useApiData } from '../../hooks/useApiData';
 import { mensagemErro } from '../../services/api';
-import type { Cliente } from '../../types/api';
 
 interface ClientesProps {
   aoSelecionarCliente: (id: number) => void;
   aoAvisar: (mensagem: string) => void;
 }
-
-type Acao = 'criar' | 'editar' | 'excluir' | 'cpf' | null;
 
 const formularioVazio = {
   nome: '',
@@ -30,15 +27,13 @@ const formularioVazio = {
 export function Clientes({ aoSelecionarCliente, aoAvisar }: ClientesProps) {
   const { dados, carregando, erro, recarregar } = useApiData(() => api.listar());
   const [busca, setBusca] = useState('');
-  const [acao, setAcao] = useState<Acao>(null);
-  const [selecionado, setSelecionado] = useState<Cliente | null>(null);
+  const [modal, setModal] = useState<'criar' | 'cpf' | null>(null);
   const [form, setForm] = useState(formularioVazio);
   const [cpfBusca, setCpfBusca] = useState('');
   const [salvando, setSalvando] = useState(false);
   const [erroForm, setErroForm] = useState('');
 
-  const lista = dados ?? [];
-  const filtrados = lista.filter(cliente =>
+  const filtrados = (dados ?? []).filter(cliente =>
     `${cliente.nome} ${cliente.telefone} ${cliente.cpf ?? ''}`
       .toLowerCase()
       .includes(busca.toLowerCase()),
@@ -47,53 +42,19 @@ export function Clientes({ aoSelecionarCliente, aoAvisar }: ClientesProps) {
   const abrirCriar = () => {
     setForm(formularioVazio);
     setErroForm('');
-    setAcao('criar');
-  };
-
-  const abrirEditar = (cliente: Cliente) => {
-    setSelecionado(cliente);
-    setForm({
-      nome: cliente.nome,
-      telefone: cliente.telefone,
-      email: cliente.email ?? '',
-      cpf: cliente.cpf ?? '',
-      endereco: cliente.endereco ?? '',
-      observacoes: cliente.observacoes ?? '',
-    });
-    setErroForm('');
-    setAcao('editar');
+    setModal('criar');
   };
 
   const salvar = async () => {
     setSalvando(true);
     setErroForm('');
     try {
-      if (acao === 'editar' && selecionado) {
-        await api.atualizar(selecionado.id, form);
-        aoAvisar('Dados do cliente atualizados');
-      } else {
-        await api.criar(form);
-        aoAvisar('Cliente cadastrado com sucesso');
-      }
-      setAcao(null);
+      await api.criar(form);
+      setModal(null);
+      aoAvisar('Cliente cadastrado com sucesso');
       recarregar();
     } catch (e) {
       setErroForm(mensagemErro(e));
-    } finally {
-      setSalvando(false);
-    }
-  };
-
-  const excluir = async () => {
-    if (!selecionado) return;
-    setSalvando(true);
-    try {
-      await api.excluir(selecionado.id);
-      setAcao(null);
-      aoAvisar('Cliente excluído');
-      recarregar();
-    } catch (e) {
-      aoAvisar(mensagemErro(e));
     } finally {
       setSalvando(false);
     }
@@ -104,7 +65,7 @@ export function Clientes({ aoSelecionarCliente, aoAvisar }: ClientesProps) {
     setErroForm('');
     try {
       const encontrado = await api.buscarPorCpf(cpfBusca.trim());
-      setAcao(null);
+      setModal(null);
       aoSelecionarCliente(encontrado.id);
     } catch (e) {
       setErroForm(mensagemErro(e));
@@ -120,7 +81,7 @@ export function Clientes({ aoSelecionarCliente, aoAvisar }: ClientesProps) {
 
       <div className="section-row">
         <h3>Clientes cadastrados</h3>
-        <button type="button" className="link-button" onClick={() => { setCpfBusca(''); setAcao('cpf'); }}>
+        <button type="button" className="link-button" onClick={() => { setCpfBusca(''); setModal('cpf'); }}>
           Buscar CPF
         </button>
       </div>
@@ -129,10 +90,15 @@ export function Clientes({ aoSelecionarCliente, aoAvisar }: ClientesProps) {
       {erro && <ErroApi mensagem={erro} aoTentarNovamente={recarregar} />}
 
       <div className="cards">
-        {!carregando && !erro && filtrados.length === 0 && <Vazio mensagem="Nenhum cliente encontrado" />}
+        {!carregando && filtrados.length === 0 && <Vazio mensagem="Nenhum cliente encontrado" />}
         {filtrados.map(cliente => (
-          <div key={cliente.id} className="card person-row">
-            <button type="button" className="click-card person-main" onClick={() => aoSelecionarCliente(cliente.id)}>
+          <button
+            type="button"
+            key={cliente.id}
+            className="card click-card person-row"
+            onClick={() => aoSelecionarCliente(cliente.id)}
+          >
+            <span className="person-main">
               <span className="initials">
                 {cliente.nome.split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase()}
               </span>
@@ -140,29 +106,17 @@ export function Clientes({ aoSelecionarCliente, aoAvisar }: ClientesProps) {
                 <h4>{cliente.nome}</h4>
                 <p>{cliente.telefone}<br />{cliente.cpf ?? 'Sem CPF'}</p>
               </span>
-            </button>
-            <div className="linha-acoes">
-              <button type="button" className="icon-button" aria-label="Editar cliente" onClick={() => abrirEditar(cliente)}>
-                <Icon nome="edit" />
-              </button>
-              <button
-                type="button"
-                className="icon-button"
-                aria-label="Excluir cliente"
-                onClick={() => { setSelecionado(cliente); setAcao('excluir'); }}
-              >
-                ×
-              </button>
-            </div>
-          </div>
+            </span>
+            <Icon nome="chevron" />
+          </button>
         ))}
       </div>
 
-      {(acao === 'criar' || acao === 'editar') && (
+      {modal === 'criar' && (
         <Modal
-          titulo={acao === 'criar' ? 'Cadastrar cliente' : 'Editar cliente'}
+          titulo="Cadastrar cliente"
           descricao="Preencha os dados do cliente."
-          aoFechar={() => setAcao(null)}
+          aoFechar={() => setModal(null)}
           aoSalvar={salvar}
           rotuloSalvar={salvando ? 'Salvando...' : 'Salvar'}
         >
@@ -178,21 +132,11 @@ export function Clientes({ aoSelecionarCliente, aoAvisar }: ClientesProps) {
         </Modal>
       )}
 
-      {acao === 'excluir' && (
-        <Modal
-          titulo="Excluir cliente"
-          descricao={`Deseja excluir ${selecionado?.nome}? Esta ação não pode ser desfeita.`}
-          aoFechar={() => setAcao(null)}
-          aoSalvar={excluir}
-          rotuloSalvar={salvando ? 'Excluindo...' : 'Excluir'}
-        />
-      )}
-
-      {acao === 'cpf' && (
+      {modal === 'cpf' && (
         <Modal
           titulo="Buscar por CPF"
           descricao="Digite o CPF completo do cliente."
-          aoFechar={() => setAcao(null)}
+          aoFechar={() => setModal(null)}
           aoSalvar={buscarCpf}
           rotuloSalvar={salvando ? 'Buscando...' : 'Buscar'}
         >

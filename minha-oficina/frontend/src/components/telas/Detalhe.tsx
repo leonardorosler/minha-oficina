@@ -136,27 +136,12 @@ export function Detalhe({ id, aoVoltar, aoAvisar, aoVerCliente }: DetalheProps) 
             {atendimento.status === 'CANCELADO' && <li className="complete">Cancelado</li>}
           </ol>
 
-          <div className="cards">
-            <div className="card">
-              <span className="meta">Problema relatado</span>
-              <p className="texto-destaque">{atendimento.problemaRelatado}</p>
-            </div>
-            <div className="card">
-              <span className="meta">Serviço previsto</span>
-              <p className="texto-destaque">{atendimento.servicoPrevisto ?? '—'}</p>
-            </div>
-            <div className="card">
-              <span className="meta">Diagnóstico</span>
-              <p className="texto-destaque">{atendimento.diagnostico ?? '—'}</p>
-            </div>
-            <div className="card">
-              <span className="meta">Responsável</span>
-              <p className="texto-destaque">{atendimento.usuario?.nome ?? '—'}</p>
-            </div>
-            <div className="card">
-              <span className="meta">Orçamento</span>
-              <p className="texto-destaque">{formatarMoeda(atendimento.orcamentoValor)}</p>
-            </div>
+          <div className="card detalhe-info">
+            <div className="detalhe-linha"><span>Problema</span><strong>{atendimento.problemaRelatado}</strong></div>
+            <div className="detalhe-linha"><span>Serviço previsto</span><strong>{atendimento.servicoPrevisto ?? '—'}</strong></div>
+            <div className="detalhe-linha"><span>Diagnóstico</span><strong>{atendimento.diagnostico ?? '—'}</strong></div>
+            <div className="detalhe-linha"><span>Responsável</span><strong>{atendimento.usuario?.nome ?? '—'}</strong></div>
+            <div className="detalhe-linha"><span>Orçamento</span><strong>{formatarMoeda(atendimento.orcamentoValor)}</strong></div>
           </div>
 
           <div className="section-row"><h3>Histórico de status</h3></div>

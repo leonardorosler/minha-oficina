@@ -17,11 +17,12 @@ interface VeiculosProps {
   aoAvisar: (mensagem: string) => void;
   aoSelecionarCliente: (id: number) => void;
   aoVerHistorico: (clienteId: number) => void;
+  aoClienteExcluido: () => void;
 }
 
-type Acao = 'criar' | 'editar' | 'excluir' | 'placa' | null;
+type Acao = 'criarVeiculo' | 'editarVeiculo' | 'editarCliente' | 'excluirCliente' | 'placa' | null;
 
-const formularioVazio = { placa: '', marca: '', modelo: '', ano: '', cor: '', observacoes: '' };
+const veiculoVazio = { placa: '', marca: '', modelo: '', ano: '', cor: '', observacoes: '' };
 
 export function Veiculos({
   clienteId,
@@ -30,12 +31,14 @@ export function Veiculos({
   aoAvisar,
   aoSelecionarCliente,
   aoVerHistorico,
+  aoClienteExcluido,
 }: VeiculosProps) {
   const clienteReq = useApiData(() => clientesApi.buscar(clienteId), [clienteId]);
   const veiculosReq = useApiData(() => clientesApi.veiculos(clienteId), [clienteId]);
   const [acao, setAcao] = useState<Acao>(null);
   const [selecionado, setSelecionado] = useState<Veiculo | null>(null);
-  const [form, setForm] = useState(formularioVazio);
+  const [formVeiculo, setFormVeiculo] = useState(veiculoVazio);
+  const [formCliente, setFormCliente] = useState({ nome: '', telefone: '', email: '', cpf: '', endereco: '' });
   const [placa, setPlaca] = useState('');
   const [salvando, setSalvando] = useState(false);
   const [erroForm, setErroForm] = useState('');
@@ -43,15 +46,15 @@ export function Veiculos({
   const cliente: Cliente | null = clienteReq.dados;
   const veiculos = veiculosReq.dados ?? [];
 
-  const abrirCriar = () => {
-    setForm(formularioVazio);
+  const abrirNovoVeiculo = () => {
+    setFormVeiculo(veiculoVazio);
     setErroForm('');
-    setAcao('criar');
+    setAcao('criarVeiculo');
   };
 
-  const abrirEditar = (veiculo: Veiculo) => {
+  const abrirEditarVeiculo = (veiculo: Veiculo) => {
     setSelecionado(veiculo);
-    setForm({
+    setFormVeiculo({
       placa: veiculo.placa,
       marca: veiculo.marca,
       modelo: veiculo.modelo,
@@ -60,18 +63,28 @@ export function Veiculos({
       observacoes: veiculo.observacoes ?? '',
     });
     setErroForm('');
-    setAcao('editar');
+    setAcao('editarVeiculo');
   };
 
-  const salvar = async () => {
+  const abrirEditarCliente = () => {
+    if (!cliente) return;
+    setFormCliente({
+      nome: cliente.nome,
+      telefone: cliente.telefone,
+      email: cliente.email ?? '',
+      cpf: cliente.cpf ?? '',
+      endereco: cliente.endereco ?? '',
+    });
+    setErroForm('');
+    setAcao('editarCliente');
+  };
+
+  const salvarVeiculo = async () => {
     setSalvando(true);
     setErroForm('');
     try {
-      const dados = {
-        ...form,
-        ano: form.ano ? Number(form.ano) : undefined,
-      };
-      if (acao === 'editar' && selecionado) {
+      const dados = { ...formVeiculo, ano: formVeiculo.ano ? Number(formVeiculo.ano) : undefined };
+      if (acao === 'editarVeiculo' && selecionado) {
         await veiculosApi.atualizar(selecionado.id, dados);
         aoAvisar('Veículo atualizado');
       } else {
@@ -87,7 +100,36 @@ export function Veiculos({
     }
   };
 
-  const excluir = async () => {
+  const salvarCliente = async () => {
+    setSalvando(true);
+    setErroForm('');
+    try {
+      await clientesApi.atualizar(clienteId, formCliente);
+      setAcao(null);
+      aoAvisar('Dados do cliente atualizados');
+      clienteReq.recarregar();
+    } catch (e) {
+      setErroForm(mensagemErro(e));
+    } finally {
+      setSalvando(false);
+    }
+  };
+
+  const excluirCliente = async () => {
+    setSalvando(true);
+    try {
+      await clientesApi.excluir(clienteId);
+      setAcao(null);
+      aoAvisar('Cliente excluído');
+      aoClienteExcluido();
+    } catch (e) {
+      aoAvisar(mensagemErro(e));
+    } finally {
+      setSalvando(false);
+    }
+  };
+
+  const excluirVeiculo = async () => {
     if (!selecionado) return;
     setSalvando(true);
     try {
@@ -137,23 +179,23 @@ export function Veiculos({
             <a className="secondary botao-link" href={`tel:${cliente.telefone}`}>
               <Icon nome="phone" /> Ligar
             </a>
-            <button type="button" className="ghost" onClick={() => aoVerHistorico(clienteId)}>
-              <Icon nome="history" /> Histórico
+            <button type="button" className="ghost" onClick={abrirEditarCliente}>
+              <Icon nome="edit" /> Editar
             </button>
           </div>
+          <button type="button" className="link-button hero-historico" onClick={() => aoVerHistorico(clienteId)}>
+            Ver histórico
+          </button>
         </div>
       )}
 
       <div className="section-row">
         <h3>Veículos</h3>
-        <button type="button" className="primary" onClick={abrirCriar}>+ Novo</button>
+        <button type="button" className="primary" onClick={abrirNovoVeiculo}>+ Novo</button>
       </div>
-
-      <div className="section-row">
-        <button type="button" className="link-button" onClick={() => { setPlaca(''); setAcao('placa'); }}>
-          Buscar pela placa
-        </button>
-      </div>
+      <button type="button" className="link-button" onClick={() => { setPlaca(''); setAcao('placa'); }}>
+        Buscar pela placa
+      </button>
 
       {veiculosReq.carregando && <Carregando />}
       {veiculosReq.erro && <ErroApi mensagem={veiculosReq.erro} aoTentarNovamente={veiculosReq.recarregar} />}
@@ -168,51 +210,64 @@ export function Veiculos({
               <span className="meta">{veiculo.placa} · {veiculo.ano ?? '—'} · {veiculo.cor ?? '—'}</span>
             </span>
             <div className="vehicle-actions">
-              <button type="button" className="ghost" onClick={() => abrirEditar(veiculo)}>Editar</button>
+              <button type="button" className="ghost" onClick={() => abrirEditarVeiculo(veiculo)}>Editar veículo</button>
               <button type="button" className="primary" onClick={() => aoNovaOS(veiculo.id)}>+ Nova OS</button>
-              <button
-                type="button"
-                className="ghost"
-                onClick={() => { setSelecionado(veiculo); setAcao('excluir'); }}
-              >
-                Excluir veículo
-              </button>
-              <button type="button" className="ghost" onClick={() => aoVerHistorico(clienteId)}>
-                Ver atendimentos
-              </button>
             </div>
           </div>
         ))}
       </div>
 
-      {(acao === 'criar' || acao === 'editar') && (
+      {(acao === 'criarVeiculo' || acao === 'editarVeiculo') && (
         <Modal
-          titulo={acao === 'criar' ? 'Cadastrar veículo' : 'Editar veículo'}
+          titulo={acao === 'criarVeiculo' ? 'Cadastrar veículo' : 'Editar veículo'}
           descricao="Informe os dados do veículo."
           aoFechar={() => setAcao(null)}
-          aoSalvar={salvar}
-          rotuloSalvar={salvando ? 'Salvando...' : 'Salvar'}
+          aoSalvar={salvarVeiculo}
+          rotuloSalvar={salvando ? 'Aguarde...' : 'Salvar'}
         >
           <div className="form-stack">
-            <div className="field"><label>Placa</label><input value={form.placa} onChange={e => setForm({ ...form, placa: e.target.value })} /></div>
-            <div className="field"><label>Marca</label><input value={form.marca} onChange={e => setForm({ ...form, marca: e.target.value })} /></div>
-            <div className="field"><label>Modelo</label><input value={form.modelo} onChange={e => setForm({ ...form, modelo: e.target.value })} /></div>
+            <div className="field"><label>Placa</label><input value={formVeiculo.placa} onChange={e => setFormVeiculo({ ...formVeiculo, placa: e.target.value })} /></div>
+            <div className="field"><label>Marca</label><input value={formVeiculo.marca} onChange={e => setFormVeiculo({ ...formVeiculo, marca: e.target.value })} /></div>
+            <div className="field"><label>Modelo</label><input value={formVeiculo.modelo} onChange={e => setFormVeiculo({ ...formVeiculo, modelo: e.target.value })} /></div>
             <div className="two-cols">
-              <div className="field"><label>Ano</label><input value={form.ano} onChange={e => setForm({ ...form, ano: e.target.value })} /></div>
-              <div className="field"><label>Cor</label><input value={form.cor} onChange={e => setForm({ ...form, cor: e.target.value })} /></div>
+              <div className="field"><label>Ano</label><input value={formVeiculo.ano} onChange={e => setFormVeiculo({ ...formVeiculo, ano: e.target.value })} /></div>
+              <div className="field"><label>Cor</label><input value={formVeiculo.cor} onChange={e => setFormVeiculo({ ...formVeiculo, cor: e.target.value })} /></div>
             </div>
-            <div className="field"><label>Observações</label><textarea value={form.observacoes} onChange={e => setForm({ ...form, observacoes: e.target.value })} /></div>
+            <div className="field"><label>Observações</label><textarea value={formVeiculo.observacoes} onChange={e => setFormVeiculo({ ...formVeiculo, observacoes: e.target.value })} /></div>
             {erroForm && <p className="erro-texto">{erroForm}</p>}
           </div>
+          {acao === 'editarVeiculo' && (
+            <button type="button" className="link-buttonperigo" onClick={excluirVeiculo}>Excluir este veículo</button>
+          )}
         </Modal>
       )}
 
-      {acao === 'excluir' && (
+      {acao === 'editarCliente' && (
         <Modal
-          titulo="Excluir veículo"
-          descricao={`Deseja excluir ${selecionado?.placa}?`}
+          titulo="Editar cliente"
+          descricao="Atualize os dados do cliente."
           aoFechar={() => setAcao(null)}
-          aoSalvar={excluir}
+          aoSalvar={salvarCliente}
+          rotuloSalvar={salvando ? 'Salvando...' : 'Salvar'}
+        >
+          <div className="form-stack">
+            <div className="field"><label>Nome</label><input value={formCliente.nome} onChange={e => setFormCliente({ ...formCliente, nome: e.target.value })} /></div>
+            <div className="field"><label>Telefone</label><input value={formCliente.telefone} onChange={e => setFormCliente({ ...formCliente, telefone: e.target.value })} /></div>
+            <div className="field"><label>E-mail</label><input type="email" value={formCliente.email} onChange={e => setFormCliente({ ...formCliente, email: e.target.value })} /></div>
+            <div className="field"><label>CPF</label><input value={formCliente.cpf} onChange={e => setFormCliente({ ...formCliente, cpf: e.target.value })} /></div>
+            <div className="field"><label>Endereço</label><input value={formCliente.endereco} onChange={e => setFormCliente({ ...formCliente, endereco: e.target.value })} /></div>
+            {erroForm && <p className="erro-texto">{erroForm}</p>}
+          </div>
+          <button type="button" className="link-buttonperigo" onClick={() => setAcao('excluirCliente')}>Excluir este cliente</button>
+        </Modal>
+      )}
+
+      {acao === 'excluirCliente' && (
+        <Modal
+          titulo="Excluir cliente"
+          descricao={`Deseja excluir ${cliente?.nome}? Esta ação não pode ser desfeita.`}
+          aoFechar={() => setAcao(null)}
+          aoSalvar={excluirCliente}
           rotuloSalvar={salvando ? 'Excluindo...' : 'Excluir'}
         />
       )}
