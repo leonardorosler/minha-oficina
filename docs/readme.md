@@ -143,6 +143,7 @@ As aplicações são publicadas separadamente na Vercel:
 |---|---|
 | Frontend | https://minha-oficina-frontend.vercel.app |
 | API | https://minha-oficina-api.vercel.app |
+| Quadro de planejamento (Miro) | https://miro.com/welcomeonboard/THRBRC85WmJ6SE5ENnlZaHg0bCtNaWYwV29hc2ZUbnVZNGdVL1JremhsM0pwTmwzK1F1eVd6aHF0RDRxQmtvTDZKSlNRWlA3VzhLeDQ1YWx1RUVpL1VZTlhyQzdHUDhmU3Q4cEQyQ3FKb2ZDdnE1aUxIckUrYWNTWE1WWmIwakZBd044SHFHaVlWYWk0d3NxeHNmeG9BPT0hdjE=?share_link_id=105175980003 |
 
 O projeto da API usa `api/index.ts` como função serverless e `vercel.json` com
 redirecionamento de todas as rotas. As variáveis `DATABASE_URL` e `JWT_SECRET`

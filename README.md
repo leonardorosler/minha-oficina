@@ -14,6 +14,7 @@ publicados em URLs diferentes e comunicando-se por API HTTP com autenticação J
 |---|---|
 | **Aplicativo mobile** | https://minha-oficina-frontend.vercel.app |
 | **API** (verificação) | https://minha-oficina-api.vercel.app |
+| **Quadro no Miro** (planejamento) | https://miro.com/welcomeonboard/THRBRC85WmJ6SE5ENnlZaHg0bCtNaWYwV29hc2ZUbnVZNGdVL1JremhsM0pwTmwzK1F1eVd6aHF0RDRxQmtvTDZKSlNRWlA3VzhLeDQ1YWx1RUVpL1VZTlhyQzdHUDhmU3Q4cEQyQ3FKb2ZDdnE1aUxIckUrYWNTWE1WWmIwakZBd044SHFHaVlWYWk0d3NxeHNmeG9BPT0hdjE=?share_link_id=105175980003 |
 
 **Login de demonstração:** `admin@oficina.com` · senha `123456` (Carlos Costa, o dono da oficina)
 
@@ -56,8 +57,8 @@ frontend local para a API publicada, configure `VITE_API_URL` no `.env`.
 4. Toque em **Clientes → + Novo**, cadastre um cliente
 5. Abra o cliente, cadastre um veículo e toque em **+ Nova OS**
 6. Na OS, use **Atualizar status** para avançar `Aguardando → Em serviço → Pronto → Finalizado`
-7. Toque em **Histórico** para ver os serviços finalizados
-8. Em **Menu**, teste **Buscas** (CPF/placa), **Na oficina** e **Usuários**
+7. Em **Menu → Histórico**, veja os serviços finalizados
+8. Ainda em **Menu**, teste **Buscas** (CPF/placa), **Na oficina** e **Usuários**
 
 Detalhes e resultados esperados em [docs/ROTEIRO-DE-TESTES.md](docs/ROTEIRO-DE-TESTES.md).
 
@@ -119,5 +120,6 @@ minha-oficina/
 ## ⚠️ Observações
 
 - O banco é compartilhado: os dados criados durante os testes ficam salvos
-- A seed cria também `mecanico@oficina.com` / `123456`
+- A seed cria também `mecanico@oficina.com` e `recepcao@oficina.com` (senha `123456` para ambos)
+- O login aceita cinco tentativas a cada 15 minutos por IP
 - Não há exclusão de atendimentos pela API (o status `CANCELADO` encerra a OS)
