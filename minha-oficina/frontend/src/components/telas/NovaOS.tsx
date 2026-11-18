@@ -52,7 +52,7 @@ export function NovaOS({ clienteInicial, veiculoInicial, aoVoltar, aoCriado, aoA
         veiculoId,
         problemaRelatado: problema.trim(),
         servicoPrevisto: servico.trim() || undefined,
-        orcamentoValor: orcamento ? Number(orcamento) : undefined,
+        orcamentoValor: orcamento ? Number(orcamento.replace(',', '.')) : undefined,
         observacoes: observacoes.trim() || undefined,
       });
       aoAvisar(`OS #${nova.id} aberta com sucesso`);

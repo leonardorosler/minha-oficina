@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Header } from '../Header';
 import { OrderCard } from '../OrderCard';
 import { Carregando, ErroApi, Vazio } from '../Estados';
-import { dashboard, historico as api } from '../../services/endpoints';
+import { atendimentos, historico as api } from '../../services/endpoints';
 import { useApiData } from '../../hooks/useApiData';
 import { formatarMoeda, nomeVeiculo, type Atendimento } from '../../types/api';
 
@@ -29,7 +29,7 @@ export function Historico({ clienteId, aoAbrirDetalhe, aoVoltar }: HistoricoProp
 
   const { dados, carregando, erro, recarregar } = useApiData<Atendimento[]>(() => {
     if (clienteId) return api.doCliente(clienteId, inicio, hoje);
-    return dashboard.buscar(inicio, hoje).then(d => d.atendimentosFinalizados);
+    return atendimentos.listar({ status: 'FINALIZADO', dataInicio: inicio, dataFim: hoje });
   }, [clienteId, inicio]);
 
   const total = (dados ?? []).reduce((soma, item) => soma + Number(item.orcamentoValor ?? 0), 0);

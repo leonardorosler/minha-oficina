@@ -60,6 +60,7 @@ export function Detalhe({ id, aoVoltar, aoAvisar, aoVerCliente }: DetalheProps) 
       aoAvisar(`Status atualizado para ${STATUS_ROTULOS[statusNovo]}`);
       atendimentoReq.recarregar();
       fluxoReq.recarregar();
+      transicoesReq.recarregar();
       historicoReq.recarregar();
     } catch (e) {
       setErroForm(mensagemErro(e));
@@ -96,6 +97,8 @@ export function Detalhe({ id, aoVoltar, aoAvisar, aoVerCliente }: DetalheProps) 
       aoAvisar('Atendimento cancelado');
       atendimentoReq.recarregar();
       fluxoReq.recarregar();
+      transicoesReq.recarregar();
+      historicoReq.recarregar();
     } catch (e) {
       aoAvisar(mensagemErro(e));
     } finally {
@@ -140,6 +143,7 @@ export function Detalhe({ id, aoVoltar, aoAvisar, aoVerCliente }: DetalheProps) 
             <div className="detalhe-linha"><span>Problema</span><strong>{atendimento.problemaRelatado}</strong></div>
             <div className="detalhe-linha"><span>Serviço previsto</span><strong>{atendimento.servicoPrevisto ?? '—'}</strong></div>
             <div className="detalhe-linha"><span>Diagnóstico</span><strong>{atendimento.diagnostico ?? '—'}</strong></div>
+            <div className="detalhe-linha"><span>Serviço realizado</span><strong>{atendimento.servicoRealizado ?? '—'}</strong></div>
             <div className="detalhe-linha"><span>Responsável</span><strong>{atendimento.usuario?.nome ?? '—'}</strong></div>
             <div className="detalhe-linha"><span>Orçamento</span><strong>{formatarMoeda(atendimento.orcamentoValor)}</strong></div>
           </div>
@@ -158,7 +162,7 @@ export function Detalhe({ id, aoVoltar, aoAvisar, aoVerCliente }: DetalheProps) 
             type="button"
             className="primary full"
             style={{ marginTop: 16 }}
-            disabled={!fluxo?.podeAlterar}
+            disabled={transicoesReq.dados ? !transicoesReq.dados.podeAlterar : !fluxo?.podeAlterar}
             onClick={() => setModal('status')}
           >
             Atualizar status

@@ -3,7 +3,7 @@
  * Usada para seleção de opções e formulários
  */
 
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 
 interface ModalProps {
   titulo: string;
@@ -22,6 +22,14 @@ export function Modal({
   aoSalvar, 
   aoFechar 
 }: ModalProps) {
+  useEffect(() => {
+    const aoTeclar = (evento: KeyboardEvent) => {
+      if (evento.key === 'Escape') aoFechar();
+    };
+    window.addEventListener('keydown', aoTeclar);
+    return () => window.removeEventListener('keydown', aoTeclar);
+  }, [aoFechar]);
+
   return (
     <div 
       className="modal-backdrop" 
