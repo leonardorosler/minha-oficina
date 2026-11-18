@@ -60,7 +60,7 @@ export function Painel({ aoNavegar, aoAbrirDetalhe, aoFiltrar, aoAbrirPerfil }: 
 
       {dados && (
         <>
-          <div className="section-row"><h3>Resumo de hoje</h3></div>
+          <div className="section-row"><h3>Resumo da oficina</h3></div>
           <div className="cards stats">
             {RESUMO.map(status => (
               <button

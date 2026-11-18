@@ -8,7 +8,7 @@ import { Carregando, ErroApi, Vazio } from '../Estados';
 import { clientes as clientesApi, veiculos as veiculosApi } from '../../services/endpoints';
 import { useApiData } from '../../hooks/useApiData';
 import { mensagemErro } from '../../services/api';
-import type { Cliente, Veiculo } from '../../types/api';
+import { STATUS_ROTULOS, formatarData, type Atendimento, type Cliente, type Veiculo } from '../../types/api';
 
 interface VeiculosProps {
   clienteId: number;
@@ -20,7 +20,7 @@ interface VeiculosProps {
   aoClienteExcluido: () => void;
 }
 
-type Acao = 'criarVeiculo' | 'editarVeiculo' | 'editarCliente' | 'excluirCliente' | 'placa' | null;
+type Acao = 'criarVeiculo' | 'editarVeiculo' | 'editarCliente' | 'excluirCliente' | 'placa' | 'atendimentos' | null;
 
 const veiculoVazio = { placa: '', marca: '', modelo: '', ano: '', cor: '', observacoes: '' };
 
@@ -40,6 +40,7 @@ export function Veiculos({
   const [formVeiculo, setFormVeiculo] = useState(veiculoVazio);
   const [formCliente, setFormCliente] = useState({ nome: '', telefone: '', email: '', cpf: '', endereco: '' });
   const [placa, setPlaca] = useState('');
+  const [atendimentosVeiculo, setAtendimentosVeiculo] = useState<Atendimento[]>([]);
   const [salvando, setSalvando] = useState(false);
   const [erroForm, setErroForm] = useState('');
 
@@ -144,6 +145,17 @@ export function Veiculos({
     }
   };
 
+  const verAtendimentos = async (veiculo: Veiculo) => {
+    try {
+      const lista = await veiculosApi.atendimentos(veiculo.id);
+      setAtendimentosVeiculo(lista);
+      setSelecionado(veiculo);
+      setAcao('atendimentos');
+    } catch (e) {
+      aoAvisar(mensagemErro(e));
+    }
+  };
+
   const buscarPlaca = async () => {
     setSalvando(true);
     setErroForm('');
@@ -213,6 +225,9 @@ export function Veiculos({
               <button type="button" className="ghost" onClick={() => abrirEditarVeiculo(veiculo)}>Editar veículo</button>
               <button type="button" className="primary" onClick={() => aoNovaOS(veiculo.id)}>+ Nova OS</button>
             </div>
+            <button type="button" className="link-button veiculo-historico" onClick={() => verAtendimentos(veiculo)}>
+              Ver atendimentos deste veículo
+            </button>
           </div>
         ))}
       </div>
@@ -270,6 +285,28 @@ export function Veiculos({
           aoSalvar={excluirCliente}
           rotuloSalvar={salvando ? 'Excluindo...' : 'Excluir'}
         />
+      )}
+
+      {acao === 'atendimentos' && (
+        <Modal
+          titulo="Atendimentos do veículo"
+          descricao={`${selecionado?.marca ?? ''} ${selecionado?.modelo ?? ''} · ${selecionado?.placa ?? ''}`}
+          aoFechar={() => setAcao(null)}
+        >
+          <div className="option-list">
+            {atendimentosVeiculo.length === 0 && <Vazio mensagem="Nenhum atendimento registrado" />}
+            {atendimentosVeiculo.map(item => (
+              <div key={item.id} className="card atendimento-minimo">
+                <div>
+                  <strong>OS #{item.id}</strong>
+                  <small>{item.problemaRelatado}</small>
+                </div>
+                <span className="badge pending">{STATUS_ROTULOS[item.status]}</span>
+                <small>{formatarData(item.dataEntrada)}</small>
+              </div>
+            ))}
+          </div>
+        </Modal>
       )}
 
       {acao === 'placa' && (
