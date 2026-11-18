@@ -5,6 +5,7 @@ import {
   buscaUsuarioPorId,
   editaUsuario,
   desativaUsuario,
+  ativaUsuario,
 } from "./usuarios.service.js";
 
 function respondeErro(res: Response, error: unknown, mensagemPadrao: string) {
@@ -105,6 +106,21 @@ export async function editaUsuarioController(req: Request, res: Response) {
     return res.status(200).json(usuario);
   } catch (error) {
     return respondeErro(res, error, "Erro ao editar usuário");
+  }
+}
+
+export async function ativaUsuarioController(req: Request, res: Response) {
+  const id = Number(req.params.id);
+
+  if (!Number.isInteger(id) || id <= 0) {
+    return res.status(400).json({ error: "ID inválido" });
+  }
+
+  try {
+    const usuario = await ativaUsuario(id);
+    return res.status(200).json(usuario);
+  } catch (error) {
+    return respondeErro(res, error, "Erro ao ativar usuário");
   }
 }
 

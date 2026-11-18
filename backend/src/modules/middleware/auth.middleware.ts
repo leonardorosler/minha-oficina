@@ -38,7 +38,7 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
 
     const usuario = await prisma.usuario.findUnique({
       where: { id: usuarioId },
-      select: { ativo: true },
+      select: { ativo: true, role: true },
     });
 
     if (!usuario || !usuario.ativo) {
@@ -48,6 +48,7 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
     }
 
     res.locals.usuarioId = usuarioId;
+    res.locals.usuarioRole = usuario.role;
   } catch (error) {
     if (error instanceof jwt.JsonWebTokenError) {
       return res.status(401).json({
