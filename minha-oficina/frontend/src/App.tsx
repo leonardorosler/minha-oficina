@@ -96,7 +96,7 @@ export default function App() {
       case 'painel':
         return <Painel aoNavegar={navegar} aoAbrirDetalhe={abrirDetalhe} aoFiltrar={filtrar} aoAbrirPerfil={() => setPerfilAberto(true)} />;
       case 'clientes':
-        return <Clientes aoSelecionarCliente={abrirCliente} aoAvisar={avisar} />;
+        return <Clientes aoSelecionarCliente={abrirCliente} aoAvisar={avisar} aoVoltar={() => navegar('menu')} />;
       case 'veiculos':
         return (
           <Veiculos
@@ -114,13 +114,13 @@ export default function App() {
           <NovaOS
             clienteInicial={clienteId}
             veiculoInicial={veiculoId}
-            aoVoltar={() => navegar('painel')}
+            aoVoltar={() => navegar('menu')}
             aoCriado={abrirDetalhe}
             aoAvisar={avisar}
           />
         );
       case 'ordens':
-        return <Ordens filtro={filtro} aoFiltrar={setFiltro} aoAbrirDetalhe={abrirDetalhe} />;
+        return <Ordens filtro={filtro} aoFiltrar={setFiltro} aoAbrirDetalhe={abrirDetalhe} aoVoltar={() => navegar('menu')} />;
       case 'detalhe':
         return (
           <Detalhe
@@ -131,17 +131,23 @@ export default function App() {
           />
         );
       case 'historico':
-        return <Historico clienteId={clienteId} aoAbrirDetalhe={abrirDetalhe} aoVoltar={() => navegar('clientes')} />;
+        return (
+          <Historico
+            clienteId={clienteId}
+            aoAbrirDetalhe={abrirDetalhe}
+            aoVoltar={() => clienteId ? navegar('veiculos') : navegar('menu')}
+          />
+        );
       case 'usuarios':
-        return <Usuarios aoAvisar={avisar} />;
+        return <Usuarios aoAvisar={avisar} aoVoltar={() => navegar('menu')} />;
       case 'buscas':
-        return <Buscas aoAbrirCliente={abrirCliente} aoAbrirDetalhe={abrirDetalhe} />;
+        return <Buscas aoAbrirCliente={abrirCliente} aoAbrirDetalhe={abrirDetalhe} aoVoltar={() => navegar('menu')} />;
       case 'na-oficina':
-        return <NaOficina aoAbrirDetalhe={abrirDetalhe} />;
+        return <NaOficina aoAbrirDetalhe={abrirDetalhe} aoVoltar={() => navegar('menu')} />;
       case 'menu':
         return (
           <Menu
-            aoNavegar={destino => navegar(destino === 'na-oficina' ? 'na-oficina' : destino === 'buscas' ? 'buscas' : 'usuarios')}
+            aoNavegar={navegar}
             aoSair={sair}
           />
         );

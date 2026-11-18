@@ -36,7 +36,7 @@ export function Historico({ clienteId, aoAbrirDetalhe, aoVoltar }: HistoricoProp
 
   return (
     <>
-      <Header titulo="Histórico" voltar={Boolean(clienteId)} aoVoltar={aoVoltar} />
+      <Header titulo="Histórico" voltar aoVoltar={aoVoltar} />
 
       <div className="tabs">
         {([['30', '30 dias'], ['90', '3 meses'], ['365', '12 meses']] as [Periodo, string][]).map(([valor, rotulo]) => (

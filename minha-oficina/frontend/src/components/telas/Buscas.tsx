@@ -18,9 +18,10 @@ import {
 interface BuscasProps {
   aoAbrirCliente: (id: number) => void;
   aoAbrirDetalhe: (id: number) => void;
+  aoVoltar: () => void;
 }
 
-export function Buscas({ aoAbrirCliente, aoAbrirDetalhe }: BuscasProps) {
+export function Buscas({ aoAbrirCliente, aoAbrirDetalhe, aoVoltar }: BuscasProps) {
   const [aba, setAba] = useState<'cpf' | 'placa'>('cpf');
   const [termo, setTermo] = useState('');
   const [cliente, setCliente] = useState<Cliente | null>(null);
@@ -61,7 +62,7 @@ export function Buscas({ aoAbrirCliente, aoAbrirDetalhe }: BuscasProps) {
 
   return (
     <>
-      <Header titulo="Buscas" />
+      <Header titulo="Buscas" voltar aoVoltar={aoVoltar} />
 
       <div className="tabs">
         <button type="button" className={`tab ${aba === 'cpf' ? 'active' : ''}`} onClick={() => { setAba('cpf'); setTermo(''); }}>Por CPF</button>

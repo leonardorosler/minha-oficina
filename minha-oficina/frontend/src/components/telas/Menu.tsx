@@ -4,7 +4,7 @@ import { Header } from '../Header';
 import { Icon, type NomeIcone } from '../Icon';
 
 interface MenuProps {
-  aoNavegar: (tela: 'usuarios' | 'buscas' | 'na-oficina') => void;
+  aoNavegar: (tela: 'historico' | 'usuarios' | 'buscas' | 'na-oficina') => void;
   aoSair: () => void;
 }
 
@@ -18,8 +18,9 @@ interface Opcao {
 
 export function Menu({ aoNavegar, aoSair }: MenuProps) {
   const opcoes: Opcao[] = [
-    { titulo: 'Na oficina', descricao: 'Veículos em atendimento', icone: 'car', cor: 'teal', acao: () => aoNavegar('na-oficina') },
-    { titulo: 'Buscas', descricao: 'Encontrar por CPF ou placa', icone: 'search', cor: 'blue', acao: () => aoNavegar('buscas') },
+    { titulo: 'Histórico', descricao: 'Serviços finalizados', icone: 'history', cor: 'teal', acao: () => aoNavegar('historico') },
+    { titulo: 'Na oficina', descricao: 'Veículos em atendimento', icone: 'car', cor: 'blue', acao: () => aoNavegar('na-oficina') },
+    { titulo: 'Buscas', descricao: 'Encontrar por CPF ou placa', icone: 'search', cor: 'teal', acao: () => aoNavegar('buscas') },
     { titulo: 'Usuários', descricao: 'Equipe e acessos', icone: 'users', cor: 'amber', acao: () => aoNavegar('usuarios') },
     { titulo: 'Sair', descricao: 'Encerrar a sessão', icone: 'logout', cor: 'red', acao: aoSair },
   ];
