@@ -22,11 +22,32 @@ export function removerToken(): void {
   localStorage.removeItem(CHAVE_TOKEN);
 }
 
+let renovando: Promise<boolean> | null = null;
+
+function renovarSessao(): Promise<boolean> {
+  if (!renovando) {
+    renovando = fetch(`${BASE_URL}/auth/refresh`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then(async resposta => {
+        if (!resposta.ok) return false;
+        const dados = await resposta.json();
+        salvarToken(dados.token);
+        return true;
+      })
+      .catch(() => false)
+      .finally(() => { renovando = null; });
+  }
+  return renovando;
+}
+
 interface OpcoesApi extends RequestInit {
   corpo?: unknown;
 }
 
-export async function api<T>(caminho: string, opcoes: OpcoesApi = {}): Promise<T> {
+export async function api<T>(caminho: string, opcoes: OpcoesApi = {}, tentouRenovar = false): Promise<T> {
   const { corpo, ...resto } = opcoes;
   const cabecalhos = new Headers(resto.headers);
   cabecalhos.set('Content-Type', 'application/json');
@@ -38,6 +59,7 @@ export async function api<T>(caminho: string, opcoes: OpcoesApi = {}): Promise<T
   try {
     resposta = await fetch(`${BASE_URL}${caminho}`, {
       ...resto,
+      credentials: 'include',
       headers: cabecalhos,
       ...(corpo !== undefined ? { body: JSON.stringify(corpo) } : {}),
     });
@@ -45,14 +67,17 @@ export async function api<T>(caminho: string, opcoes: OpcoesApi = {}): Promise<T
     throw new ApiError('Não foi possível conectar ao servidor', 0);
   }
 
+  if (resposta.status === 401 && !tentouRenovar && !caminho.startsWith('/auth/')) {
+    if (await renovarSessao()) return api<T>(caminho, opcoes, true);
+    removerToken();
+    window.dispatchEvent(new Event('sessao-expirada'));
+    throw new ApiError('Sessão expirada', 401);
+  }
+
   const texto = await resposta.text();
   let dados: unknown = null;
   if (texto) {
-    try {
-      dados = JSON.parse(texto);
-    } catch {
-      dados = null;
-    }
+    try { dados = JSON.parse(texto); } catch { dados = null; }
   }
 
   if (!resposta.ok) {
@@ -60,12 +85,6 @@ export async function api<T>(caminho: string, opcoes: OpcoesApi = {}): Promise<T
       dados && typeof dados === 'object' && 'error' in dados
         ? String((dados as { error: unknown }).error)
         : 'Erro ao processar a solicitação';
-
-    if (resposta.status === 401) {
-      removerToken();
-      window.dispatchEvent(new Event('sessao-expirada'));
-    }
-
     throw new ApiError(mensagem, resposta.status);
   }
 
@@ -73,16 +92,9 @@ export async function api<T>(caminho: string, opcoes: OpcoesApi = {}): Promise<T
 }
 
 export const apiGet = <T>(caminho: string) => api<T>(caminho);
-
-export const apiPost = <T>(caminho: string, corpo: unknown) =>
-  api<T>(caminho, { method: 'POST', corpo });
-
-export const apiPut = <T>(caminho: string, corpo: unknown) =>
-  api<T>(caminho, { method: 'PUT', corpo });
-
-export const apiPatch = <T>(caminho: string, corpo?: unknown) =>
-  api<T>(caminho, { method: 'PATCH', ...(corpo !== undefined ? { corpo } : {}) });
-
+export const apiPost = <T>(caminho: string, corpo: unknown) => api<T>(caminho, { method: 'POST', corpo });
+export const apiPut = <T>(caminho: string, corpo: unknown) => api<T>(caminho, { method: 'PUT', corpo });
+export const apiPatch = <T>(caminho: string, corpo?: unknown) => api<T>(caminho, { method: 'PATCH', ...(corpo !== undefined ? { corpo } : {}) });
 export const apiDelete = <T>(caminho: string) => api<T>(caminho, { method: 'DELETE' });
 
 export function mensagemErro(erro: unknown): string {
