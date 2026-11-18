@@ -30,17 +30,26 @@ export function BottomNav({ telaAtual, aoNavegar }: BottomNavProps) {
 
   return (
     <nav className="bottom-nav" aria-label="Navegação principal">
-      {itens.map(({ tela, icone, rotulo }) => (
-        <button
-          key={tela}
-          type="button"
-          className={`nav-item ${ativa === tela ? 'active' : ''} ${tela === 'nova-os' ? 'center' : ''}`}
-          onClick={() => aoNavegar(tela)}
-        >
-          <span className="nav-icon"><Icon nome={icone} /></span>
-          <span>{rotulo}</span>
-        </button>
-      ))}
+      {itens.map(({ tela, icone, rotulo }) => {
+        const centro = tela === 'nova-os';
+        return (
+          <button
+            key={tela}
+            type="button"
+            className={`nav-item ${ativa === tela ? 'active' : ''} ${centro ? 'center' : ''}`}
+            onClick={() => aoNavegar(tela)}
+            aria-label={rotulo}
+            aria-current={ativa === tela ? 'page' : undefined}
+          >
+            {centro ? (
+              <span className="nav-fab"><Icon nome="plus" /></span>
+            ) : (
+              <span className="nav-icon"><Icon nome={icone} /></span>
+            )}
+            <span className="nav-label">{rotulo}</span>
+          </button>
+        );
+      })}
     </nav>
   );
 }
