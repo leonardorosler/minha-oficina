@@ -7,7 +7,7 @@ import { Carregando, ErroApi, Vazio } from '../Estados';
 import { usuarios as api } from '../../services/endpoints';
 import { useApiData } from '../../hooks/useApiData';
 import { mensagemErro } from '../../services/api';
-import { formatarData, type Usuario } from '../../types/api';
+import { PAPEIS_ROTULOS, type Usuario } from '../../types/api';
 
 interface UsuariosProps {
   aoAvisar: (mensagem: string) => void;
@@ -89,13 +89,18 @@ export function Usuarios({ aoAvisar, aoVoltar }: UsuariosProps) {
               <span className="initials">{usuario.nome.slice(0, 2).toUpperCase()}</span>
               <span>
                 <h4>{usuario.nome}</h4>
-                <p>{usuario.email}<br />{usuario.ativo ? 'Ativo' : 'Desativado'} · desde {formatarData(usuario.criadoEm)}</p>
+                <p>{usuario.email}<br />{PAPEIS_ROTULOS[usuario.role ?? 'MECANICO']} · {usuario.ativo ? 'Ativo' : 'Desativado'}</p>
               </span>
             </span>
             <div className="linha-acoes">
               <button type="button" className="icon-button" aria-label="Editar" onClick={() => abrirEditar(usuario)}>✎</button>
-              {usuario.ativo && (
+              {usuario.ativo ? (
                 <button type="button" className="icon-button" aria-label="Desativar" onClick={() => { setSelecionado(usuario); setAcao('desativar'); }}>⊘</button>
+              ) : (
+                <button type="button" className="icon-button" aria-label="Reativar" onClick={async () => {
+                  try { await api.ativar(usuario.id); aoAvisar('Usuário reativado'); recarregar(); }
+                  catch (e) { aoAvisar(mensagemErro(e)); }
+                }}>↺</button>
               )}
             </div>
           </div>

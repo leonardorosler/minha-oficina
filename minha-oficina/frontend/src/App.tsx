@@ -5,6 +5,8 @@ import { BottomNav } from './components/BottomNav';
 import { Toast } from './components/Toast';
 import { Modal } from './components/Modal';
 import { useAuth } from './context/AuthContext';
+import { auth } from './services/endpoints';
+import { mensagemErro } from './services/api';
 import { Login } from './components/telas/Login';
 import { Painel } from './components/telas/Painel';
 import { Clientes } from './components/telas/Clientes';
@@ -20,13 +22,16 @@ import { Menu } from './components/telas/Menu';
 import type { StatusAtendimento, Tela } from './types';
 
 export default function App() {
-  const { usuario, carregando, sair } = useAuth();
+  const { usuario, carregando, sair: contextoSair } = useAuth();
   const [tela, setTela] = useState<Tela>('painel');
   const [clienteId, setClienteId] = useState<number | null>(null);
   const [veiculoId, setVeiculoId] = useState<number | null>(null);
   const [atendimentoId, setAtendimentoId] = useState<number | null>(null);
   const [filtro, setFiltro] = useState<StatusAtendimento | null>(null);
   const [perfilAberto, setPerfilAberto] = useState(false);
+  const [senhaAtual, setSenhaAtual] = useState('');
+  const [senhaNova, setSenhaNova] = useState('');
+  const [erroSenha, setErroSenha] = useState('');
   const [mensagem, setMensagem] = useState('');
   const [toastVisivel, setToastVisivel] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -56,6 +61,24 @@ export default function App() {
   const abrirCliente = (id: number) => {
     setClienteId(id);
     navegar('veiculos');
+  };
+
+  const sair = async () => {
+    try { await auth.logout(); } catch { /* ignora falha ao encerrar */ }
+    contextoSair();
+  };
+
+  const alterarSenha = async () => {
+    setErroSenha('');
+    try {
+      await auth.trocarSenha(senhaAtual, senhaNova);
+      setSenhaAtual('');
+      setSenhaNova('');
+      setPerfilAberto(false);
+      avisar('Senha alterada com sucesso');
+    } catch (e) {
+      setErroSenha(mensagemErro(e));
+    }
   };
 
   const abrirNovaOS = (cliente: number | null = null, veiculo: number | null = null) => {
@@ -172,12 +195,21 @@ export default function App() {
               <span><h4>{usuario.nome}</h4><p>{usuario.email}</p></span>
             </span>
           </div>
-          <button
-            type="button"
-            className="ghost full"
-            style={{ marginTop: 12 }}
-            onClick={() => { setPerfilAberto(false); sair(); }}
-          >
+          <div className="form-stack" style={{ marginTop: 14 }}>
+            <div className="field">
+              <label>Senha atual</label>
+              <input type="password" value={senhaAtual} onChange={e => setSenhaAtual(e.target.value)} />
+            </div>
+            <div className="field">
+              <label>Nova senha</label>
+              <input type="password" value={senhaNova} onChange={e => setSenhaNova(e.target.value)} />
+            </div>
+            {erroSenha && <p className="erro-texto">{erroSenha}</p>}
+            <button type="button" className="secondary full" onClick={alterarSenha}>
+              Alterar senha
+            </button>
+          </div>
+          <button type="button" className="ghost full" style={{ marginTop: 10 }} onClick={sair}>
             Sair da conta
           </button>
         </Modal>

@@ -2,6 +2,7 @@
 
 import { Header } from '../Header';
 import { Icon, type NomeIcone } from '../Icon';
+import { useAuth } from '../../context/AuthContext';
 
 interface MenuProps {
   aoNavegar: (tela: 'historico' | 'usuarios' | 'buscas' | 'na-oficina') => void;
@@ -17,11 +18,14 @@ interface Opcao {
 }
 
 export function Menu({ aoNavegar, aoSair }: MenuProps) {
+  const { usuario } = useAuth();
+  const ehAdmin = usuario?.role === 'ADMIN';
+
   const opcoes: Opcao[] = [
     { titulo: 'Histórico', descricao: 'Serviços finalizados', icone: 'history', cor: 'teal', acao: () => aoNavegar('historico') },
     { titulo: 'Na oficina', descricao: 'Veículos em atendimento', icone: 'car', cor: 'blue', acao: () => aoNavegar('na-oficina') },
     { titulo: 'Buscas', descricao: 'Encontrar por CPF ou placa', icone: 'search', cor: 'teal', acao: () => aoNavegar('buscas') },
-    { titulo: 'Usuários', descricao: 'Equipe e acessos', icone: 'users', cor: 'amber', acao: () => aoNavegar('usuarios') },
+    ...(ehAdmin ? [{ titulo: 'Usuários', descricao: 'Equipe e acessos', icone: 'users' as NomeIcone, cor: 'amber', acao: () => aoNavegar('usuarios' as const) }] : []),
     { titulo: 'Sair', descricao: 'Encerrar a sessão', icone: 'logout', cor: 'red', acao: aoSair },
   ];
 

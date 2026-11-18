@@ -1,6 +1,6 @@
 /** Lista de clientes com cadastro e busca por CPF */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Header } from '../Header';
 import { Search } from '../Search';
 import { Icon } from '../Icon';
@@ -9,6 +9,7 @@ import { Carregando, ErroApi, Vazio } from '../Estados';
 import { clientes as api } from '../../services/endpoints';
 import { useApiData } from '../../hooks/useApiData';
 import { mensagemErro } from '../../services/api';
+import type { Cliente } from '../../types/api';
 
 interface ClientesProps {
   aoSelecionarCliente: (id: number) => void;
@@ -26,7 +27,9 @@ const formularioVazio = {
 };
 
 export function Clientes({ aoSelecionarCliente, aoAvisar, aoVoltar }: ClientesProps) {
-  const { dados, carregando, erro, recarregar } = useApiData(() => api.listar());
+  const [pagina, setPagina] = useState(1);
+  const { dados, carregando, erro, recarregar } = useApiData(() => api.listar(pagina, 20), [pagina]);
+  const [itens, setItens] = useState<Cliente[]>([]);
   const [busca, setBusca] = useState('');
   const [modal, setModal] = useState<'criar' | 'cpf' | null>(null);
   const [form, setForm] = useState(formularioVazio);
@@ -34,7 +37,14 @@ export function Clientes({ aoSelecionarCliente, aoAvisar, aoVoltar }: ClientesPr
   const [salvando, setSalvando] = useState(false);
   const [erroForm, setErroForm] = useState('');
 
-  const filtrados = (dados ?? []).filter(cliente =>
+  useEffect(() => {
+    if (!dados) return;
+    setItens(anterior => pagina === 1
+      ? dados
+      : [...anterior, ...dados.filter(item => !anterior.some(feito => feito.id === item.id))]);
+  }, [dados, pagina]);
+
+  const filtrados = itens.filter(cliente =>
     `${cliente.nome} ${cliente.telefone} ${cliente.cpf ?? ''}`
       .toLowerCase()
       .includes(busca.toLowerCase()),
@@ -112,6 +122,12 @@ export function Clientes({ aoSelecionarCliente, aoAvisar, aoVoltar }: ClientesPr
           </button>
         ))}
       </div>
+
+      {dados && dados.length === 20 && (
+        <button type="button" className="ghost full" style={{ marginTop: 12 }} onClick={() => setPagina(p => p + 1)}>
+          Carregar mais clientes
+        </button>
+      )}
 
       {modal === 'criar' && (
         <Modal
