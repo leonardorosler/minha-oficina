@@ -16,7 +16,7 @@ trabalha com pressa e com a oficina barulhenta. Precisa entender a tela em segun
 |---|---|---|
 | 1 | Abriu o link no celular | Tela de login limpa, logotipo grande e campo de e-mail com 16,8px — leu sem esforço |
 | 2 | Digitou e-mail e senha, tocou em **Entrar na oficina** | Botão com 56px de altura e 16,8px de fonte — alvo fácil, não errou o dedo |
-| 3 | Chegou ao Painel | Saudação "Bom dia, Administrador" em 28px. Entendeu de imediato os 4 números do resumo |
+| 3 | Chegou ao Painel | Saudação "Bom dia, Carlos" em 28px. Entendeu de imediato os 4 números do resumo |
 | 4 | Tocou no alerta amarelo "3 aguardando atendimento" | Foi direto para Ordens já filtradas — não precisou procurar |
 | 5 | Tocou em **Ordens** na barra inferior | Ícone ativo preenchido em teal ajudou a saber onde estava |
 | 6 | Observou a lista | **Cartões inteiros coloridos por status**: amarelo = aguardando, azul = em serviço, verde = pronto, teal = finalizado, vermelho = cancelado. Entendeu sem ler o badge |
@@ -56,7 +56,7 @@ trabalha com pressa e com a oficina barulhenta. Precisa entender a tela em segun
 1. **"Toque para filtrar" (12,2px)** e o **subtítulo do alerta (13,4px)** ficam abaixo dos 16px recomendados para o público — o João precisou aproximar o celular
 2. **Kicker "MINHA OFICINA" (11px)** é decorativo, mas ainda assim pequeno
 3. **Rótulo dos cards de resumo (15,7px)** está no limite; subir para 16px daria folga
-4. A barra inferior mostra o nome por extenso **somente no item ativo** (padrão Instagram). Para o João, isso foi suficiente porque ele reconheceu os ícones, mas é o ponto mais sensível para usuários de 48+
+4. ~~A barra inferior mostrava o nome somente no item ativo.~~ **Corrigido por decisão do usuário:** todos os rótulos (Painel, Clientes, Nova OS, Ordens, Menu) agora ficam sempre visíveis, para que o usuário nunca precise adivinhar o que cada ícone faz
 
 ## Conclusão
 

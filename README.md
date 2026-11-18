@@ -15,7 +15,7 @@ publicados em URLs diferentes e comunicando-se por API HTTP com autenticação J
 | **Aplicativo mobile** | https://minha-oficina-frontend.vercel.app |
 | **API** (verificação) | https://minha-oficina-api.vercel.app |
 
-**Login de demonstração:** `admin@oficina.com` · senha `123456`
+**Login de demonstração:** `admin@oficina.com` · senha `123456` (Carlos Costa, o dono da oficina)
 
 > Dica: abra o link do aplicativo no celular ou use o modo responsivo do navegador
 > com largura de 390px para ver a interface mobile como foi projetada.
@@ -63,6 +63,24 @@ Detalhes e resultados esperados em [docs/ROTEIRO-DE-TESTES.md](docs/ROTEIRO-DE-T
 
 ---
 
+## 📱 Navegação e permissões
+
+A barra inferior tem cinco botões — **Painel, Clientes, Nova OS, Ordens e Menu** —
+todos com o nome escrito, para que não seja necessário adivinhar o que cada ícone
+faz. O botão central abre uma nova ordem de serviço.
+
+Existem três papéis de usuário:
+
+| Papel | O que pode fazer |
+|---|---|
+| Dono (Carlos) | Tudo, inclusive excluir registros e gerenciar usuários |
+| Mecânico | Abrir e atualizar os atendimentos que criou, além de consultar os demais dados |
+| Recepcionista | Cadastrar clientes e veículos e abrir ordens de serviço |
+
+O card de cada ordem fica colorido conforme o status: amarelo (aguardando), azul
+(em serviço), verde (pronto), teal (finalizado) e vermelho (cancelado). Assim dá
+para entender a situação de relance, sem precisar ler o texto.
+
 ## 📁 Estrutura
 
 ```text
@@ -94,6 +112,7 @@ minha-oficina/
 - [Roteiro de testes](docs/ROTEIRO-DE-TESTES.md)
 - [Auditoria UI/UX](docs/AUDITORIA-UI-UX.md)
 - [Teste com mecânico de 48 anos](docs/TESTE-USUARIO-48ANOS.md)
+- [O que mudou e por quê](docs/O-QUE-MUDOU.md)
 - [Frontend](minha-oficina/frontend/README.md)
 - [Sistema de design](minha-oficina/frontend/design-system/minha-oficina/MASTER.md)
 

@@ -73,7 +73,7 @@ O app apresenta uma identidade visual coesa, cores consistentes e uma boa estrut
 ## 4. Análise por Critério Avaliado
 
 ### (1) Hierarquia visual e legibilidade das fontes
-Os títulos principais ("Bem-vindo de volta", "Bom dia, Administrador", "Clientes", "Nova OS", "Detalhe da OS") usam tamanho adequado e boam contraste. O problema está nos **textos secundários e auxiliares** (rodapés, placeholders, metadados, pílulas pequenas), que ficam abaixo do recomendado para o público-alvo de 48 anos. Recomenda-se tamanho mínimo de 16px para texto de corpo e rótulos.
+Os títulos principais ("Bem-vindo de volta", "Bom dia, Carlos", "Clientes", "Nova OS", "Detalhe da OS") usam tamanho adequado e boam contraste. O problema está nos **textos secundários e auxiliares** (rodapés, placeholders, metadados, pílulas pequenas), que ficam abaixo do recomendado para o público-alvo de 48 anos. Recomenda-se tamanho mínimo de 16px para texto de corpo e rótulos.
 
 ### (2) Consistência de cores, espaçamentos, raios, ícones e componentes
 A consistência de cores é boa: azul #0f2a43 em cabeçalhos/elementos principais, teal #0d9488 em botões primários e ativos, âmbar #f59e0b em cards de alerta/ação. Raios arredondados consistentes nos cards. Ícones da barra inferior repetidos, mas com tamanho pequeno e rótulos inconsistentes (alguns têm label, outros não).
@@ -140,7 +140,7 @@ Os achados abaixo foram corrigidos e validados em produção:
 | ACH-08 | ✅ Corrigido | Telefones e CPFs com 15,7px e cor mais escura |
 | ACH-10 | ✅ Corrigido | Pílulas de status com 14,7px e mais padding |
 | ACH-13 | ✅ Corrigido | Botão "Ver senha" ampliado |
-| ACH-11 | ⚠️ Decisão de design | Rótulos da barra inferior permanecem visíveis apenas no item ativo, conforme o padrão Instagram solicitado; ícones e alvos de toque foram ampliados |
+| ACH-11 | ✅ Corrigido | Decisão do usuário: **todos os rótulos da barra inferior ficam sempre visíveis** (Painel, Clientes, Nova OS, Ordens, Menu), para que qualquer pessoa saiba o que cada ícone faz sem precisar adivinhar |
 | ACH-09, ACH-12, ACH-14 a ACH-21 | 📌 Backlog | Polimento restante (seta do veículo, reforço do "Sair", textos auxiliares) |
 
 ## 7. Metodologia e Limitações
