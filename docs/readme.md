@@ -66,8 +66,9 @@ Inicialmente, os atendimentos poderão possuir os seguintes status:
 - `EM_SERVICO`
 - `PRONTO`
 - `FINALIZADO`
+- `CANCELADO`
 
-Informações específicas sobre o motivo de um veículo estar aguardando podem ser registradas nas observações.
+A transição válida é `AGUARDANDO → EM_SERVICO → PRONTO → FINALIZADO`. O status `CANCELADO` encerra o atendimento. Informações específicas sobre o motivo de um veículo estar aguardando podem ser registradas nas observações.
 
 ## 🚀 MVP
 
@@ -105,13 +106,34 @@ O MVP do projeto contempla:
 
 ```text
 minha-oficina/
-├── frontend/       # Aplicação web
+├── minha-oficina/
+│   └── frontend/   # Aplicativo mobile (React + Vite)
 ├── backend/        # API e regras de negócio
+├── minha-oficina-offline/
+│   └── versao-editavel/  # Protótipo navegável original
 ├── docs/           # Documentação do projeto
 └── README.md
 ```
 
-O front-end e o back-end permanecem no mesmo repositório, mas podem ser publicados separadamente.
+O front-end e o back-end permanecem no mesmo repositório, mas são **projetos independentes**, com dependências, build e execução separados. O front-end consome a API exclusivamente por HTTP, usando o token JWT no cabeçalho `Authorization: Bearer`.
+
+### Como executar
+
+```bash
+# Backend (porta 3333)
+cd backend
+npm install
+npm run dev
+
+# Frontend (porta 5173)
+cd minha-oficina/frontend
+npm install
+npm run dev
+```
+
+O endereço da API pode ser configurado em `minha-oficina/frontend/.env` (ver `.env.example`). O padrão é `http://localhost:3333`.
+
+Usuário de demonstração (seed): `admin@oficina.com` / `123456`.
 
 ## 📚 Documentação
 
