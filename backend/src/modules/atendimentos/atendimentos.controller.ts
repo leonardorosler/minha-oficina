@@ -89,10 +89,12 @@ export async function listarAtendimentosController(
   }
 
   try {
+    const pagina = Math.max(1, Number(req.query.pagina) || 1);
+    const limite = Math.min(100, Math.max(1, Number(req.query.limite) || 50));
     const atendimentos = await listarAtendimentos({
       ...filtros.data,
       dataFim: ajustarDataFim(filtros.data.dataFim, req.query.dataFim),
-    });
+    }, pagina, limite);
     return res.status(200).json(atendimentos);
   } catch {
     return res.status(500).json({ error: "Erro ao listar atendimentos" });
@@ -137,7 +139,10 @@ export async function editarAtendimentoController(req: Request, res: Response) {
   }
 
   try {
-    const atendimento = await editarAtendimento(id.data, dados.data);
+    const atendimento = await editarAtendimento(id.data, {
+      ...dados.data,
+      usuarioId: Number(res.locals.usuarioId),
+    });
     return res.status(200).json(atendimento);
   } catch (error) {
     if (
@@ -165,7 +170,7 @@ export async function cancelarAtendimentoController(
   }
 
   try {
-    const atendimento = await cancelarAtendimento(id.data);
+    const atendimento = await cancelarAtendimento(id.data, Number(res.locals.usuarioId));
     return res.status(200).json(atendimento);
   } catch (error) {
     if (

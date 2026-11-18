@@ -104,6 +104,7 @@ export async function alterarStatusAtendimento(
         statusAnterior: atendimento.status,
         statusNovo: dados.statusNovo,
         observacao: dados.observacao ?? `Status alterado para ${dados.statusNovo}`,
+        usuarioId: dados.usuarioId,
       },
     });
 
@@ -125,9 +126,7 @@ export async function buscarFluxoAtendimento(atendimentoId: number) {
     include: {
       historicoStatus: {
         orderBy: { criadoEm: "asc" },
-        include: {
-          // O usuario não está diretamente no historicoStatus, mas podemos buscar se necessário
-        },
+        include: { usuario: { select: { id: true, nome: true } } },
       },
     },
   });

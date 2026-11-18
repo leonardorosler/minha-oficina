@@ -4,7 +4,10 @@ import { prisma } from "../../lib/prisma.js";
 const atendimentoComRelacoes = {
   veiculo: { include: { cliente: true } },
   usuario: { select: { id: true, nome: true, email: true } },
-  historicoStatus: { orderBy: { criadoEm: "asc" as const } },
+  historicoStatus: {
+    orderBy: { criadoEm: "asc" as const },
+    include: { usuario: { select: { id: true, nome: true } } },
+  },
 };
 
 export interface AbrirAtendimento {
@@ -26,6 +29,7 @@ export interface EditarAtendimento {
   orcamentoValor?: number | null;
   observacoes?: string | null;
   status?: StatusAtendimento;
+  usuarioId?: number;
 }
 
 export interface FiltrosAtendimento {
@@ -62,6 +66,7 @@ export async function abrirAtendimento(data: AbrirAtendimento) {
         statusAnterior: null,
         statusNovo: StatusAtendimento.AGUARDANDO,
         observacao: "Atendimento aberto",
+        usuarioId: data.usuarioId,
       },
     });
 
@@ -72,7 +77,7 @@ export async function abrirAtendimento(data: AbrirAtendimento) {
   });
 }
 
-export async function listarAtendimentos(filtros: FiltrosAtendimento) {
+export async function listarAtendimentos(filtros: FiltrosAtendimento, pagina = 1, limite = 50) {
   return prisma.atendimento.findMany({
     where: {
       ...(filtros.status ? { status: filtros.status } : {}),
@@ -91,6 +96,8 @@ export async function listarAtendimentos(filtros: FiltrosAtendimento) {
     },
     include: atendimentoComRelacoes,
     orderBy: { dataEntrada: "desc" },
+    skip: (pagina - 1) * limite,
+    take: limite,
   });
 }
 
@@ -139,6 +146,7 @@ export async function editarAtendimento(id: number, data: EditarAtendimento) {
           statusAnterior: atual.status,
           statusNovo: data.status!,
           observacao: "Status atualizado",
+          usuarioId: data.usuarioId,
         },
       });
     }
@@ -185,7 +193,7 @@ export async function listarVeiculosNaOficina() {
   });
 }
 
-export async function cancelarAtendimento(id: number) {
+export async function cancelarAtendimento(id: number, usuarioId: number) {
   return prisma.$transaction(async (tx) => {
     const atual = await tx.atendimento.findUnique({ where: { id } });
     if (!atual) throw new Error("Atendimento não encontrado");
@@ -201,6 +209,7 @@ export async function cancelarAtendimento(id: number) {
         statusAnterior: atual.status,
         statusNovo: StatusAtendimento.CANCELADO,
         observacao: "Atendimento cancelado",
+        usuarioId,
       },
     });
 
