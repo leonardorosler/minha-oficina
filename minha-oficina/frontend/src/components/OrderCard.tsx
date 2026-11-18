@@ -18,7 +18,11 @@ export function OrderCard({ atendimento, aoClicar }: OrderCardProps) {
   const cliente = veiculo?.cliente?.nome ?? 'Cliente';
 
   return (
-    <button type="button" className="card click-card order-row" onClick={aoClicar}>
+    <button
+      type="button"
+      className={`card click-card order-row os-${atendimento.status.toLowerCase()}`}
+      onClick={aoClicar}
+    >
       <div className="order-conteudo">
         <h4>OS #{atendimento.id}</h4>
         <p>
