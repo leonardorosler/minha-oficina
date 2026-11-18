@@ -256,6 +256,16 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 }
 .order-conteudo { min-width: 0; }
 .order-lateral { display: grid; justify-items: end; align-content: center; gap: 4px; }
+
+/* Cor do cartão inteira por status - alta visibilidade */
+.order-row.os-aguardando { background: var(--warning-tint); border-color: #f0d38c; border-left: 6px solid var(--warning); }
+.order-row.os-em_servico { background: var(--info-tint); border-color: #bcd2f5; border-left: 6px solid var(--info); }
+.order-row.os-pronto { background: var(--success-tint); border-color: #a7e8c4; border-left: 6px solid var(--success); }
+.order-row.os-finalizado { background: var(--primary-tint); border-color: #a9e5dc; border-left: 6px solid var(--primary); }
+.order-row.os-cancelado { background: var(--danger-tint); border-color: #f6bdb7; border-left: 6px solid var(--danger); }
+.order-row .money { color: var(--brand); }
+.order-row .badge { background: rgba(255,255,255,.82); box-shadow: 0 1px 4px rgba(15,42,67,.08); }
+.order-row .seta-circular { background: rgba(255,255,255,.85); }
 .order-row h4 { margin: 0 0 6px; font-size: 1.06rem; color: var(--brand); }
 .order-row p { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.45; }
 .order-row strong { color: var(--ink); font-size: .98rem; }
