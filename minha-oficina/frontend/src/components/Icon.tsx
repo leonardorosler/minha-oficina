@@ -8,7 +8,7 @@ export type NomeIcone =
   | 'more' | 'edit' | 'wrench' | 'gear' | 'gauge' | 'clock'
   | 'checkCircle' | 'trash' | 'userCircle' | 'logout' | 'chart'
   | 'bell' | 'shield' | 'calendar' | 'receipt' | 'spark' | 'arrowUp'
-  | 'grid' | 'plusSquare';
+  | 'grid' | 'plusSquare' | 'arrowRight';
 
 const caminhos: Record<NomeIcone, JSX.Element> = {
   home: <><path d="M3 11.5 12 4l9 7.5M5.5 10v10h13V10M9.5 20v-6h5v6" /></>,
@@ -42,6 +42,7 @@ const caminhos: Record<NomeIcone, JSX.Element> = {
   arrowUp: <><path d="M12 19V5M6 11l6-6 6 6" /></>,
   grid: <><circle cx="6" cy="6" r="1.6" /><circle cx="12" cy="6" r="1.6" /><circle cx="18" cy="6" r="1.6" /><circle cx="6" cy="12" r="1.6" /><circle cx="12" cy="12" r="1.6" /><circle cx="18" cy="12" r="1.6" /><circle cx="6" cy="18" r="1.6" /><circle cx="12" cy="18" r="1.6" /><circle cx="18" cy="18" r="1.6" /></>,
   plusSquare: <><rect x="3.5" y="3.5" width="17" height="17" rx="5" /><path d="M12 8v8M8 12h8" /></>,
+  arrowRight: <><path d="M4 12h15M13 6l6 6-6 6" /></>,
 };
 
 const preenchidos: Partial<Record<NomeIcone, JSX.Element>> = {

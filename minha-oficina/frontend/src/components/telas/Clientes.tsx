@@ -108,7 +108,7 @@ export function Clientes({ aoSelecionarCliente, aoAvisar, aoVoltar }: ClientesPr
                 <p>{cliente.telefone}<br />{cliente.cpf ?? 'Sem CPF'}</p>
               </span>
             </span>
-            <Icon nome="chevron" />
+            <Icon nome="arrowRight" />
           </button>
         ))}
       </div>

@@ -68,7 +68,7 @@ export function Ordens({ filtro, aoFiltrar, aoAbrirDetalhe, aoVoltar }: OrdensPr
           <strong>Veículos na oficina</strong>
           <small>{naOficina.dados?.length ?? 0} veículos em atendimento</small>
         </span>
-        <Icon nome="chevron" />
+        <Icon nome="arrowRight" />
       </button>
 
       {somenteOficina && (

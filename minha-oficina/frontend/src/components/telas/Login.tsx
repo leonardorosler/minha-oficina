@@ -90,7 +90,7 @@ export function Login() {
 
           <button type="submit" className="primary full botao-entrar" disabled={entrando}>
             {entrando ? 'Entrando...' : 'Entrar na oficina'}
-            {!entrando && <Icon nome="chevron" />}
+            {!entrando && <Icon nome="arrowRight" />}
           </button>
         </div>
       </form>

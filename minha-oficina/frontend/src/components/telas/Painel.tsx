@@ -84,14 +84,14 @@ export function Painel({ aoNavegar, aoAbrirDetalhe, aoFiltrar, aoAbrirPerfil }: 
                 <strong>{contagem('AGUARDANDO')} aguardando atendimento</strong>
                 <small>Ver ordens paradas</small>
               </span>
-              <Icon nome="chevron" />
+              <Icon nome="arrowRight" />
             </button>
             <button type="button" className="card click-card alert-card" onClick={() => irParaFiltro('PRONTO')}>
               <span>
                 <strong>{dados.veiculosProntos.length} prontos para retirada</strong>
                 <small>Avisar os clientes</small>
               </span>
-              <Icon nome="chevron" />
+              <Icon nome="arrowRight" />
             </button>
           </div>
 

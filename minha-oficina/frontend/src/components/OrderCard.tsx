@@ -19,7 +19,7 @@ export function OrderCard({ atendimento, aoClicar }: OrderCardProps) {
 
   return (
     <button type="button" className="card click-card order-row" onClick={aoClicar}>
-      <div>
+      <div className="order-conteudo">
         <h4>OS #{atendimento.id}</h4>
         <p>
           <strong>{nomeVeiculo(veiculo)} {veiculo?.ano ?? ''}</strong>
@@ -27,13 +27,15 @@ export function OrderCard({ atendimento, aoClicar }: OrderCardProps) {
           {cliente}{atendimento.usuario?.nome && ` · ${atendimento.usuario.nome}`}
         </p>
       </div>
-      <div>
+
+      <div className="order-lateral">
         <Badge status={atendimento.status} />
         {atendimento.orcamentoValor && (
           <p className="money">{formatarMoeda(atendimento.orcamentoValor)}</p>
         )}
-        <span className="chevron"><Icon nome="chevron" /></span>
       </div>
+
+      <span className="seta-circular" aria-hidden="true"><Icon nome="arrowRight" /></span>
     </button>
   );
 }

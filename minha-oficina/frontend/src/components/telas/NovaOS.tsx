@@ -80,7 +80,7 @@ export function NovaOS({ clienteInicial, veiculoInicial, aoVoltar, aoCriado, aoA
               <strong>{cliente?.nome ?? 'Selecionar cliente'}</strong>
               <small>{cliente?.telefone ?? 'Escolha quem será atendido'}</small>
             </span>
-            <Icon nome="chevron" />
+            <Icon nome="arrowRight" />
           </button>
         </div>
 
@@ -96,7 +96,7 @@ export function NovaOS({ clienteInicial, veiculoInicial, aoVoltar, aoCriado, aoA
               <strong>{veiculo ? `${veiculo.marca} ${veiculo.modelo}` : 'Selecionar veículo'}</strong>
               <small>{veiculo ? `${veiculo.placa} · ${veiculo.ano ?? ''}` : 'Disponível após escolher o cliente'}</small>
             </span>
-            <Icon nome="chevron" />
+            <Icon nome="arrowRight" />
           </button>
         </div>
 
