@@ -1,6 +1,6 @@
 /** Lista de ordens de serviço com filtros e veículos na oficina */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Header } from '../Header';
 import { Search } from '../Search';
 import { OrderCard } from '../OrderCard';
@@ -8,7 +8,7 @@ import { Icon } from '../Icon';
 import { Carregando, ErroApi, Vazio } from '../Estados';
 import { atendimentos as api } from '../../services/endpoints';
 import { useApiData } from '../../hooks/useApiData';
-import { STATUS_ROTULOS, type StatusAtendimento } from '../../types/api';
+import { STATUS_ROTULOS, type Atendimento, type StatusAtendimento } from '../../types/api';
 
 interface OrdensProps {
   filtro: StatusAtendimento | null;
@@ -28,13 +28,24 @@ const ABAS: (StatusAtendimento | null)[] = [
 export function Ordens({ filtro, aoFiltrar, aoAbrirDetalhe, aoVoltar }: OrdensProps) {
   const [busca, setBusca] = useState('');
   const [somenteOficina, setSomenteOficina] = useState(false);
-  const { dados, carregando, erro, recarregar } = useApiData(
-    () => api.listar(filtro ? { status: filtro } : {}),
-    [filtro],
+  const [pagina, setPagina] = useState(1);
+  const [itens, setItens] = useState<Atendimento[]>([]);
+  const { dados, carregando, atualizando, erro, recarregar } = useApiData(
+    () => api.listar(filtro ? { status: filtro } : {}, pagina, 20),
+    [filtro, pagina],
   );
+
+  useEffect(() => {
+    if (!dados) return;
+    setItens(anterior => pagina === 1
+      ? dados
+      : [...anterior, ...dados.filter(item => !anterior.some(feito => feito.id === item.id))]);
+  }, [dados, pagina]);
   const naOficina = useApiData(() => api.veiculosNaOficina(), []);
 
-  const visiveis = (dados ?? []).filter(atendimento => {
+  useEffect(() => { setPagina(1); }, [filtro]);
+
+  const visiveis = itens.filter(atendimento => {
     if (!busca.trim()) return true;
     const texto = busca.toLowerCase();
     return (
@@ -91,7 +102,7 @@ export function Ordens({ filtro, aoFiltrar, aoAbrirDetalhe, aoVoltar }: OrdensPr
       {carregando && <Carregando />}
       {erro && <ErroApi mensagem={erro} aoTentarNovamente={recarregar} />}
 
-      <div className="cards">
+      <div className={`cards ${atualizando ? 'atualizando' : ''}`}>
         {!carregando && visiveis.length === 0 && <Vazio mensagem="Nenhuma ordem encontrada" />}
         {visiveis.map(atendimento => (
           <OrderCard
@@ -101,6 +112,12 @@ export function Ordens({ filtro, aoFiltrar, aoAbrirDetalhe, aoVoltar }: OrdensPr
           />
         ))}
       </div>
+
+      {dados && dados.length === 20 && (
+        <button type="button" className="ghost full" style={{ marginTop: 12 }} onClick={() => setPagina(p => p + 1)}>
+          Carregar mais ordens
+        </button>
+      )}
     </>
   );
 }

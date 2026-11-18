@@ -213,3 +213,23 @@ Before delivering any UI code, verify:
 - [ ] Responsive: 375px, 768px, 1024px, 1440px
 - [ ] No content hidden behind fixed navbars
 - [ ] No horizontal scroll on mobile
+
+---
+
+## Decisões do produto (registradas pelo usuário)
+
+### Barra de navegação inferior
+A barra usa cinco ícones (Painel, Clientes, Nova OS, Ordens e Menu), com o item
+ativo em teal preenchido. Embora a referência visual seja o Instagram,
+**todos os rótulos de texto ficam sempre visíveis**, e não apenas no item ativo.
+O motivo é o público-alvo: um mecânico de 48 anos não deve precisar adivinhar
+o que cada ícone faz. O botão central de criar continuará em destaque.
+
+### Cartões de ordem de serviço
+O cartão inteiro muda de cor conforme o status do atendimento: amarelo
+(aguardando), azul (em serviço), verde (pronto), teal (finalizado) e vermelho
+(cancelado). A cor vem antes da leitura do texto e ajuda quem está com pressa.
+
+### Texto e alvos de toque
+Nada abaixo de 16px para texto informativo. Botões principais com no mínimo
+56px de altura e alvos de toque de 44px ou mais.

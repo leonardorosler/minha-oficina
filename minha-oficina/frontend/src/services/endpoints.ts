@@ -18,6 +18,10 @@ import type {
 export const auth = {
   login: (email: string, senha: string) =>
     apiPost<RespostaLogin>('/auth/login', { email, senha }),
+  refresh: () => apiPost<RespostaLogin>('/auth/refresh', {}),
+  logout: () => apiPost<{ message: string }>('/auth/logout', {}),
+  trocarSenha: (senhaAtual: string, senhaNova: string) =>
+    apiPatch<{ message: string }>('/auth/senha', { senhaAtual, senhaNova }),
   eu: () => apiGet<Usuario>('/auth/me'),
 };
 
@@ -32,7 +36,8 @@ export const dashboard = {
 };
 
 export const clientes = {
-  listar: () => apiGet<Cliente[]>('/clientes'),
+  listar: (pagina = 1, limite = 50) =>
+    apiGet<Cliente[]>(`/clientes?pagina=${pagina}&limite=${limite}`),
   buscar: (id: number) => apiGet<Cliente>(`/clientes/${id}`),
   buscarPorCpf: (cpf: string) =>
     apiGet<Cliente>(`/clientes/cpf/${encodeURIComponent(cpf)}`),
@@ -92,8 +97,10 @@ export interface FiltrosAtendimento {
 }
 
 export const atendimentos = {
-  listar: (filtros: FiltrosAtendimento = {}) => {
+  listar: (filtros: FiltrosAtendimento = {}, pagina = 1, limite = 50) => {
     const params = new URLSearchParams();
+    params.set('pagina', String(pagina));
+    params.set('limite', String(limite));
     Object.entries(filtros).forEach(([chave, valor]) => {
       if (valor !== undefined && valor !== '') params.set(chave, String(valor));
     });
@@ -166,6 +173,7 @@ export const usuarios = {
     apiPost<Usuario>('/usuarios', dados),
   editar: (id: number, dados: { nome?: string; email?: string; senha?: string }) =>
     apiPatch<Usuario>(`/usuarios/${id}`, dados),
+  ativar: (id: number) => apiPatch<Usuario>(`/usuarios/${id}/ativar`),
   desativar: (id: number) => apiPatch<Usuario>(`/usuarios/${id}/desativar`),
 };
 

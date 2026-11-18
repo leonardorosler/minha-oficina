@@ -15,18 +15,41 @@ enum StatusAtendimento {
   CANCELADO
 }
 
+enum RoleUsuario {
+  ADMIN
+  MECANICO
+  RECEPCIONISTA
+}
+
 model Usuario {
   id           Int      @id @default(autoincrement())
   nome         String   @db.VarChar(100)
   email        String   @unique @db.VarChar(100)
   senhaHash    String   @map("senha_hash") @db.VarChar(255)
+  role         RoleUsuario @default(MECANICO)
   criadoEm     DateTime @default(now()) @map("criado_em")
   atualizadoEm DateTime @updatedAt @map("atualizado_em")
   ativo        Boolean  @default(true)
 
-  atendimentos Atendimento[]
+  atendimentos    Atendimento[]
+  historicosStatus HistoricoStatus[]
+  refreshTokens   RefreshToken[]
 
   @@map("usuarios")
+}
+
+model RefreshToken {
+  id         Int      @id @default(autoincrement())
+  tokenHash  String   @unique @map("token_hash") @db.VarChar(64)
+  usuarioId  Int      @map("usuario_id")
+  expiraEm   DateTime @map("expira_em")
+  revogado   Boolean  @default(false)
+  criadoEm   DateTime @default(now()) @map("criado_em")
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+
+  @@index([usuarioId])
+  @@map("refresh_tokens")
 }
 
 model Cliente {
@@ -92,9 +115,11 @@ model HistoricoStatus {
   statusAnterior StatusAtendimento? @map("status_anterior")
   statusNovo     StatusAtendimento  @map("status_novo")
   observacao     String?
+  usuarioId      Int?               @map("usuario_id")
   criadoEm       DateTime           @default(now()) @map("criado_em")
 
   atendimento Atendimento @relation(fields: [atendimentoId], references: [id])
+  usuario     Usuario?    @relation(fields: [usuarioId], references: [id])
 
   @@map("historico_status")
 }

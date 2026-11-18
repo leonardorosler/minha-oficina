@@ -1,28 +1,15 @@
 import { Router } from 'express';
+import { RoleUsuario } from '../../../generated/prisma/client.js';
+import { autorizar } from '../middleware/autorizar.middleware.js';
 import { atualizarClientescontroller, buscarClientePorCpfController, buscarClientePorIdController, cadastrarClientescontroller, deletarClientescontroller, listarAtendimentosDoClienteController, listarClientesController, listarVeiculosDoClienteController } from './clientes.controller.js';
 
 export const clientesRouter = Router();
 
-//cadastrar cliente
-clientesRouter.post('/', cadastrarClientescontroller);
-
-//listar clientes
+clientesRouter.post('/', autorizar(RoleUsuario.ADMIN, RoleUsuario.RECEPCIONISTA), cadastrarClientescontroller);
 clientesRouter.get('/', listarClientesController);
-
-//buscar cliente por cpf
 clientesRouter.get('/cpf/:cpf', buscarClientePorCpfController);
-
-//buscar cliente por id
 clientesRouter.get('/:id', buscarClientePorIdController);
-
-//listar veiculos do cliente
 clientesRouter.get('/:id/veiculos', listarVeiculosDoClienteController);
-
-//listar historico de atendimentos do cliente
 clientesRouter.get('/:id/atendimentos', listarAtendimentosDoClienteController);
-
-//atualizar cliente
-clientesRouter.put('/:id', atualizarClientescontroller);
-
-//deletar cliente
-clientesRouter.delete('/:id', deletarClientescontroller);
+clientesRouter.put('/:id', autorizar(RoleUsuario.ADMIN, RoleUsuario.RECEPCIONISTA), atualizarClientescontroller);
+clientesRouter.delete('/:id', autorizar(RoleUsuario.ADMIN), deletarClientescontroller);

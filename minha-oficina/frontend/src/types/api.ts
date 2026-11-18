@@ -31,14 +31,24 @@ export const STATUS_TODOS: StatusAtendimento[] = [
   'CANCELADO',
 ];
 
+export type PapelUsuario = 'ADMIN' | 'MECANICO' | 'RECEPCIONISTA';
+
+export const PAPEIS_ROTULOS: Record<PapelUsuario, string> = {
+  ADMIN: 'Dono',
+  MECANICO: 'Mecânico',
+  RECEPCIONISTA: 'Recepcionista',
+};
+
 export interface UsuarioResumo {
   id: number;
   nome: string;
   email?: string;
+  role?: PapelUsuario;
 }
 
 export interface Usuario extends UsuarioResumo {
   email: string;
+  role: PapelUsuario;
   ativo: boolean;
   criadoEm: string;
   atualizadoEm: string;
@@ -77,6 +87,8 @@ export interface HistoricoStatus {
   statusAnterior: StatusAtendimento | null;
   statusNovo: StatusAtendimento;
   observacao: string | null;
+  usuarioId?: number | null;
+  usuario?: { id: number; nome: string } | null;
   criadoEm: string;
 }
 

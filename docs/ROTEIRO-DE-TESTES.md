@@ -20,7 +20,7 @@ navegador. Não é necessário instalar nada.
 | Passo | Ação | Resultado esperado |
 |---|---|---|
 | 1.1 | Abrir o link do aplicativo | Tela de login com o logotipo "Minha Oficina" |
-| 1.2 | Informar e-mail e senha e tocar em **Entrar na oficina** | Abertura do Painel com saudação "Bom dia, Administrador" |
+| 1.2 | Informar e-mail e senha e tocar em **Entrar na oficina** | Abertura do Painel com saudação "Bom dia, Carlos" |
 | 1.3 | Recarregar a página (F5) | Permanece logado (sessão mantida por token) |
 | 1.4 | Tocar no avatar **CC** → **Sair da conta** | Volta para a tela de login |
 

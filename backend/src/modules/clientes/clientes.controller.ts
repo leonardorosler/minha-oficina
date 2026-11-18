@@ -29,11 +29,13 @@ export async function cadastrarClientescontroller (req: Request, res: Response) 
 
 
 //listar clientes
-export async function listarClientesController(  _req: Request,  res: Response) 
+export async function listarClientesController(  req: Request,  res: Response)
 {
   try {
     
-    const clientes = await listarClientes();
+    const pagina = Math.max(1, Number(req.query.pagina) || 1);
+    const limite = Math.min(100, Math.max(1, Number(req.query.limite) || 50));
+    const clientes = await listarClientes(pagina, limite);
 
 
     return res.status(200).json(clientes);
@@ -144,6 +146,9 @@ export async function deletarClientescontroller (req: Request, res: Response) {
         const cliente = await deletarClientes(Number(id));
         res.status(200).json(cliente);
     } catch (error) {
+        if ((error as { code?: string }).code === 'P2003') {
+            return res.status(409).json({ error: 'Não é possível excluir: existem veículos ou atendimentos vinculados a este cliente' });
+        }
         res.status(500).json({ error: 'Erro ao deletar cliente' });
     }
 }

@@ -43,10 +43,13 @@ export async function cadastrarClientes(data: CadastraCliente) {
 
 //listar clientes 
 
-export async function listarClientes( ) 
+export async function listarClientes(pagina = 1, limite = 50)
 {
-
-  return prisma.cliente.findMany();
+  return prisma.cliente.findMany({
+    orderBy: { id: 'asc' },
+    skip: (pagina - 1) * limite,
+    take: limite,
+  });
 }
 
 

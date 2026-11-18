@@ -10,6 +10,7 @@ export async function listarHistoricoStatusPorAtendimento(
     orderBy: {
       criadoEm: "asc",
     },
+    include: { usuario: { select: { id: true, nome: true } } },
   });
   return historicoStatus;
 }
@@ -34,7 +35,7 @@ export async function listarHistoricoServicosDoVeiculo(
     include: {
       veiculo: { include: { cliente: true } },
       usuario: { select: { id: true, nome: true } },
-      historicoStatus: true,
+      historicoStatus: { include: { usuario: { select: { id: true, nome: true } } } },
     },
     orderBy: { dataEntrada: "desc" },
   });
@@ -60,7 +61,7 @@ export async function listarHistoricoServicosDoCliente(
     include: {
       veiculo: { include: { cliente: true } },
       usuario: { select: { id: true, nome: true } },
-      historicoStatus: true,
+      historicoStatus: { include: { usuario: { select: { id: true, nome: true } } } },
     },
     orderBy: { dataEntrada: "desc" },
   });

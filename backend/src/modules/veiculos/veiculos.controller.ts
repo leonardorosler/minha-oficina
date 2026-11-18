@@ -118,6 +118,9 @@ export async function deletarVeiculoController(req: Request, res: Response) {
         const veiculo = await deletarVeiculo(Number(id));
         res.status(200).json(veiculo);
     } catch (error) {
+        if ((error as { code?: string }).code === 'P2003') {
+            return res.status(409).json({ error: 'Não é possível excluir: existem atendimentos vinculados a este veículo' });
+        }
         res.status(500).json({ error: 'Erro ao deletar veículo' });
     }
 }

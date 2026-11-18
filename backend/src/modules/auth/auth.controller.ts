@@ -1,45 +1,118 @@
 import type { Request, Response } from "express";
-import { login } from "./auth.service.js";
+import {
+  login,
+  logout,
+  renovar,
+  trocarSenha,
+} from "./auth.service.js";
 import { buscaUsuarioPorId } from "../usuarios/usuarios.service.js";
 
+const NOME_COOKIE = "refreshToken";
+const SETE_DIAS = 7 * 24 * 60 * 60 * 1000;
+
+function lerCookie(req: Request, nome: string): string | undefined {
+  const cabecalho = req.headers.cookie;
+  if (!cabecalho) return undefined;
+  const item = cabecalho
+    .split(";")
+    .map(parte => parte.trim())
+    .find(parte => parte.startsWith(`${nome}=`));
+  return item ? decodeURIComponent(item.slice(nome.length + 1)) : undefined;
+}
+
+function definirCookie(res: Response, token: string) {
+  res.cookie(NOME_COOKIE, token, {
+    httpOnly: true,
+    secure: Boolean(process.env.VERCEL || process.env.NODE_ENV === "production"),
+    sameSite: "none",
+    path: "/",
+    maxAge: SETE_DIAS,
+  });
+}
+
+function responderErro(res: Response, erro: unknown, mensagem: string) {
+  const texto = erro instanceof Error ? erro.message : mensagem;
+  const status =
+    texto === "E-mail ou senha inválidos" || texto === "Senha atual incorreta"
+      ? 401
+      : texto === "Sessão expirada"
+        ? 401
+        : texto === "Usuário não encontrado"
+          ? 404
+          : 500;
+  return res.status(status).json({ error: texto });
+}
+
 export async function loginController(req: Request, res: Response) {
-  const { email, senha } = req.body;
+  const { email, senha } = req.body ?? {};
 
   if (
-    typeof email !== "string" ||
-    !email.trim() ||
-    typeof senha !== "string" ||
-    !senha.trim()
+    typeof email !== "string" || !email.trim() ||
+    typeof senha !== "string" || !senha.trim()
   ) {
-    return res.status(400).json({
-      error: "E-mail e senha são obrigatórios",
-    });
+    return res.status(400).json({ error: "E-mail e senha são obrigatórios" });
   }
 
   try {
     const resultado = await login({ email, senha });
+    definirCookie(res, resultado.refreshToken);
+    return res.status(200).json({
+      token: resultado.token,
+      expiresIn: resultado.expiresIn,
+      usuario: resultado.usuario,
+    });
+  } catch (erro) {
+    return responderErro(res, erro, "Erro ao realizar login");
+  }
+}
 
-    return res.status(200).json(resultado);
-  } catch (error) {
-    if (
-      error instanceof Error &&
-      error.message === "E-mail ou senha inválidos"
-    ) {
-      return res.status(401).json({ error: error.message });
-    }
+export async function refreshController(req: Request, res: Response) {
+  const token = lerCookie(req, NOME_COOKIE);
+  if (!token) return res.status(401).json({ error: "Refresh token não informado" });
 
-    return res.status(500).json({ error: "Erro ao realizar login" });
+  try {
+    const resultado = await renovar(token);
+    definirCookie(res, resultado.refreshToken);
+    return res.status(200).json({
+      token: resultado.token,
+      expiresIn: resultado.expiresIn,
+      usuario: resultado.usuario,
+    });
+  } catch (erro) {
+    return responderErro(res, erro, "Erro ao renovar sessão");
+  }
+}
+
+export async function logoutController(req: Request, res: Response) {
+  await logout(lerCookie(req, NOME_COOKIE));
+  res.clearCookie(NOME_COOKIE, { path: "/", sameSite: "none", secure: true });
+  return res.status(200).json({ message: "Sessão encerrada" });
+}
+
+export async function trocarSenhaController(req: Request, res: Response) {
+  const { senhaAtual, senhaNova } = req.body ?? {};
+  if (
+    typeof senhaAtual !== "string" || !senhaAtual.trim() ||
+    typeof senhaNova !== "string" || senhaNova.trim().length < 6
+  ) {
+    return res.status(400).json({
+      error: "Informe a senha atual e a nova senha (mínimo 6 caracteres)",
+    });
+  }
+
+  try {
+    await trocarSenha(Number(res.locals.usuarioId), senhaAtual, senhaNova);
+    return res.status(200).json({ message: "Senha alterada com sucesso" });
+  } catch (erro) {
+    return responderErro(res, erro, "Erro ao alterar senha");
   }
 }
 
 export async function usuarioLogadoController(req: Request, res: Response) {
   try {
     const usuario = await buscaUsuarioPorId(res.locals.usuarioId);
-
     return res.status(200).json(usuario);
-  } catch (error) {
-    return res.status(500).json({
-      error: "Erro ao consultar usuário logado",
-    });
+  } catch {
+    return res.status(500).json({ error: "Erro ao consultar usuário logado" });
   }
 }

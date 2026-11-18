@@ -153,7 +153,10 @@ export function Detalhe({ id, aoVoltar, aoAvisar, aoVerCliente }: DetalheProps) 
             {(historicoReq.dados ?? []).map(item => (
               <div key={item.id} className="card historico-item">
                 <strong>{STATUS_ROTULOS[item.statusNovo]}</strong>
-                <span className="meta">{formatarDataHora(item.criadoEm)}</span>
+                <span className="meta">
+                  {formatarDataHora(item.criadoEm)}
+                  {item.usuario?.nome ? ` · por ${item.usuario.nome}` : ''}
+                </span>
               </div>
             ))}
           </div>

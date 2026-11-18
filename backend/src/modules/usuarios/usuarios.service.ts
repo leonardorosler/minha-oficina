@@ -18,6 +18,7 @@ const camposUsuario = {
   id: true,
   nome: true,
   email: true,
+  role: true,
   ativo: true,
   criadoEm: true,
   atualizadoEm: true,
@@ -97,6 +98,16 @@ export async function desativaUsuario(id: number) {
   return prisma.usuario.update({
     where: { id },
     data: { ativo: false },
+    select: camposUsuario,
+  });
+}
+
+export async function ativaUsuario(id: number) {
+  await buscaUsuarioPorId(id);
+
+  return prisma.usuario.update({
+    where: { id },
+    data: { ativo: true },
     select: camposUsuario,
   });
 }
