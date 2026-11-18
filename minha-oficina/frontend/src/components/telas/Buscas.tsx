@@ -86,7 +86,7 @@ export function Buscas({ aoAbrirCliente, aoAbrirDetalhe, aoVoltar }: BuscasProps
               <span className="initials">{cliente.nome.slice(0, 2).toUpperCase()}</span>
               <span><h4>{cliente.nome}</h4><p>{cliente.telefone}<br />{cliente.cpf}</p></span>
             </span>
-            <button type="button" className="icon-button" aria-label="Abrir cliente" onClick={() => aoAbrirCliente(cliente.id)}><Icon nome="chevron" /></button>
+            <button type="button" className="icon-button" aria-label="Abrir cliente" onClick={() => aoAbrirCliente(cliente.id)}><Icon nome="arrowRight" /></button>
           </div>
 
           <div className="section-row"><h3>Atendimentos do cliente</h3></div>
@@ -96,7 +96,7 @@ export function Buscas({ aoAbrirCliente, aoAbrirDetalhe, aoVoltar }: BuscasProps
             {atendimentosCliente.dados?.map(item => (
               <button type="button" key={item.id} className="card click-card order-row" onClick={() => aoAbrirDetalhe(item.id)}>
                 <span><h4>OS #{item.id}</h4><p>{item.problemaRelatado}<br />{formatarData(item.dataEntrada)}</p></span>
-                <Icon nome="chevron" />
+                <Icon nome="arrowRight" />
               </button>
             ))}
           </div>
@@ -121,7 +121,7 @@ export function Buscas({ aoAbrirCliente, aoAbrirDetalhe, aoVoltar }: BuscasProps
             {atendimentosVeiculo.dados?.map(item => (
               <button type="button" key={item.id} className="card click-card order-row" onClick={() => aoAbrirDetalhe(item.id)}>
                 <span><h4>OS #{item.id}</h4><p>{item.problemaRelatado}<br />{formatarData(item.dataEntrada)}</p></span>
-                <Icon nome="chevron" />
+                <Icon nome="arrowRight" />
               </button>
             ))}
           </div>

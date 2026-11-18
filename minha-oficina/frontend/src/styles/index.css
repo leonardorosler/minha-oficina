@@ -246,12 +246,28 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 .alert-card .icon { color: #b47509; }
 
 /* Ordens */
-.order-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.order-row {
+  position: relative;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding-right: 62px;
+  min-height: 92px;
+}
+.order-conteudo { min-width: 0; }
+.order-lateral { display: grid; justify-items: end; align-content: center; gap: 4px; }
 .order-row h4 { margin: 0 0 6px; font-size: 1.06rem; color: var(--brand); }
 .order-row p { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.45; }
 .order-row strong { color: var(--ink); font-size: .98rem; }
 .order-row .money { margin-top: 6px; font-weight: 800; color: var(--success); }
-.chevron { color: #94a3b8; display: inline-flex; vertical-align: middle; margin-left: 4px; }
+.seta-circular {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--secondary); color: var(--primary-dark);
+  display: grid; place-items: center; flex: 0 0 auto;
+}
+.seta-circular .icon { width: 19px; height: 19px; stroke-width: 2.4; }
 .badge {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 6px 11px; border-radius: 99px;

@@ -45,7 +45,7 @@ export function Menu({ aoNavegar, aoSair }: MenuProps) {
               <strong>{opcao.titulo}</strong>
               <small>{opcao.descricao}</small>
             </span>
-            <Icon nome="chevron" />
+            <Icon nome="arrowRight" />
           </button>
         ))}
       </div>
