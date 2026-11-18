@@ -153,6 +153,7 @@ variável `VITE_API_URL` apontando para a API publicada.
 
 - [README principal](../README.md) — acesso em produção, credenciais e início rápido
 - [Roteiro de testes](./ROTEIRO-DE-TESTES.md) — passo a passo para validar o sistema no navegador
+- [Auditoria UI/UX](./AUDITORIA-UI-UX.md) — achados, severidades e prioridades
 - [README do frontend](../minha-oficina/frontend/README.md) — rotas da API, telas e estrutura do app
 - [Sistema de design](../minha-oficina/frontend/design-system/minha-oficina/MASTER.md) — paleta, tipografia e padrões visuais
 
