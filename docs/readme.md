@@ -135,6 +135,20 @@ O endereço da API pode ser configurado em `minha-oficina/frontend/.env` (ver `.
 
 Usuário de demonstração (seed): `admin@oficina.com` / `123456`.
 
+### Publicação
+
+As aplicações são publicadas separadamente na Vercel:
+
+| Aplicação | URL de produção |
+|---|---|
+| Frontend | https://minha-oficina-frontend.vercel.app |
+| API | https://minha-oficina-api.vercel.app |
+
+O projeto da API usa `api/index.ts` como função serverless e `vercel.json` com
+redirecionamento de todas as rotas. As variáveis `DATABASE_URL` e `JWT_SECRET`
+são configuradas como segredos no projeto `minha-oficina-api`. O frontend usa a
+variável `VITE_API_URL` apontando para a API publicada.
+
 ## 📚 Documentação
 
 A documentação detalhada do projeto está disponível na pasta [`docs`](./docs).
