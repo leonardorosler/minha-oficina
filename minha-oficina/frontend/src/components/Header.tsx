@@ -50,7 +50,11 @@ export function Header({
           onClick={aoClicarAcao}
           aria-label={acao === 'avatar' ? 'Abrir perfil' : rotuloAcao || 'Mais opções'}
         >
-          {acao === 'avatar' ? 'CC' : acao === 'texto' ? rotuloAcao : <Icon nome={iconeAcao} />}
+          {acao === 'avatar' ? (
+            <span className="avatar-conteudo">
+              CC<small>Perfil</small>
+            </span>
+          ) : acao === 'texto' ? rotuloAcao : <Icon nome={iconeAcao} />}
         </button>
       )}
     </header>

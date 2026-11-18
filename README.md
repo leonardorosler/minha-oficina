@@ -92,6 +92,7 @@ minha-oficina/
 
 - [Visão geral do projeto](docs/readme.md)
 - [Roteiro de testes](docs/ROTEIRO-DE-TESTES.md)
+- [Auditoria UI/UX](docs/AUDITORIA-UI-UX.md)
 - [Frontend](minha-oficina/frontend/README.md)
 - [Sistema de design](minha-oficina/frontend/design-system/minha-oficina/MASTER.md)
 
