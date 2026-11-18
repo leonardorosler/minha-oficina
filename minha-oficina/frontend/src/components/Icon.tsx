@@ -7,7 +7,8 @@ export type NomeIcone =
   | 'chevron' | 'back' | 'car' | 'filter' | 'check' | 'phone'
   | 'more' | 'edit' | 'wrench' | 'gear' | 'gauge' | 'clock'
   | 'checkCircle' | 'trash' | 'userCircle' | 'logout' | 'chart'
-  | 'bell' | 'shield' | 'calendar' | 'receipt' | 'spark' | 'arrowUp';
+  | 'bell' | 'shield' | 'calendar' | 'receipt' | 'spark' | 'arrowUp'
+  | 'grid' | 'plusSquare';
 
 const caminhos: Record<NomeIcone, JSX.Element> = {
   home: <><path d="M3 11.5 12 4l9 7.5M5.5 10v10h13V10M9.5 20v-6h5v6" /></>,
@@ -39,23 +40,34 @@ const caminhos: Record<NomeIcone, JSX.Element> = {
   receipt: <><path d="M5 3h14v18l-3-2-4 2-4-2-3 2V3zM8 8h8M8 12h8M8 16h5" /></>,
   spark: <><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8" /></>,
   arrowUp: <><path d="M12 19V5M6 11l6-6 6 6" /></>,
+  grid: <><circle cx="6" cy="6" r="1.6" /><circle cx="12" cy="6" r="1.6" /><circle cx="18" cy="6" r="1.6" /><circle cx="6" cy="12" r="1.6" /><circle cx="12" cy="12" r="1.6" /><circle cx="18" cy="12" r="1.6" /><circle cx="6" cy="18" r="1.6" /><circle cx="12" cy="18" r="1.6" /><circle cx="18" cy="18" r="1.6" /></>,
+  plusSquare: <><rect x="3.5" y="3.5" width="17" height="17" rx="5" /><path d="M12 8v8M8 12h8" /></>,
+};
+
+const preenchidos: Partial<Record<NomeIcone, JSX.Element>> = {
+  home: <path d="M12 3 2.5 11.3l1.3 1.5L5 11.8V21h5.2v-6.2h3.6V21H19v-9.2l1.2 1 1.3-1.5L12 3z" />,
+  users: <><circle cx="9" cy="8" r="4" /><path d="M2.5 21v-2c0-3.3 2.9-5.5 6.5-5.5s6.5 2.2 6.5 5.5v2H2.5zM17 5.2a3.5 3.5 0 0 1 0 6.6 5.7 5.7 0 0 1 3.5 4.3l.5 4.9h-3.2l-.8-4.9c-.2-1.1-.9-1.9-2-2.3 2.8-.9 4.3-3.1 4.3-5.6 0-1.4-.5-2.6-1.5-3.5" /></>,
+  clipboard: <path d="M7 3h10a2 2 0 0 1 2 2v16H5V5a2 2 0 0 1 2-2zm2 2v2h6V5H9zM8 11h8v2H8zm0 4h8v2H8z" />,
+  grid: <><circle cx="6" cy="6" r="2.2" /><circle cx="12" cy="6" r="2.2" /><circle cx="18" cy="6" r="2.2" /><circle cx="6" cy="12" r="2.2" /><circle cx="12" cy="12" r="2.2" /><circle cx="18" cy="12" r="2.2" /><circle cx="6" cy="18" r="2.2" /><circle cx="12" cy="18" r="2.2" /><circle cx="18" cy="18" r="2.2" /></>,
 };
 
 interface IconProps {
   nome: NomeIcone;
   className?: string;
   tamanho?: number;
+  preenchido?: boolean;
 }
 
-export function Icon({ nome, className = '', tamanho }: IconProps) {
+export function Icon({ nome, className = '', tamanho, preenchido = false }: IconProps) {
+  const conteudo = preenchido ? (preenchidos[nome] ?? caminhos[nome]) : caminhos[nome];
   return (
     <svg
-      className={`icon ${className}`}
+      className={`icon ${className} ${preenchido ? 'preenchido' : ''}`}
       viewBox="0 0 24 24"
       aria-hidden="true"
       {...(tamanho ? { width: tamanho, height: tamanho } : {})}
     >
-      {caminhos[nome]}
+      {conteudo}
     </svg>
   );
 }

@@ -14,6 +14,7 @@ interface OrdensProps {
   filtro: StatusAtendimento | null;
   aoFiltrar: (filtro: StatusAtendimento | null) => void;
   aoAbrirDetalhe: (id: number) => void;
+  aoVoltar: () => void;
 }
 
 const ABAS: (StatusAtendimento | null)[] = [
@@ -24,7 +25,7 @@ const ABAS: (StatusAtendimento | null)[] = [
   'FINALIZADO',
 ];
 
-export function Ordens({ filtro, aoFiltrar, aoAbrirDetalhe }: OrdensProps) {
+export function Ordens({ filtro, aoFiltrar, aoAbrirDetalhe, aoVoltar }: OrdensProps) {
   const [busca, setBusca] = useState('');
   const [somenteOficina, setSomenteOficina] = useState(false);
   const { dados, carregando, erro, recarregar } = useApiData(
@@ -45,7 +46,7 @@ export function Ordens({ filtro, aoFiltrar, aoAbrirDetalhe }: OrdensProps) {
 
   return (
     <>
-      <Header titulo="Ordens" />
+      <Header titulo="Ordens" voltar aoVoltar={aoVoltar} />
 
       <Search placeholder="Buscar por OS, cliente ou placa" valor={busca} aoAlterar={setBusca} />
 

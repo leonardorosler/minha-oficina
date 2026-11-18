@@ -151,9 +151,12 @@ variável `VITE_API_URL` apontando para a API publicada.
 
 ## 📚 Documentação
 
-A documentação detalhada do projeto está disponível na pasta [`docs`](./docs).
+- [README principal](../README.md) — acesso em produção, credenciais e início rápido
+- [Roteiro de testes](./ROTEIRO-DE-TESTES.md) — passo a passo para validar o sistema no navegador
+- [README do frontend](../minha-oficina/frontend/README.md) — rotas da API, telas e estrutura do app
+- [Sistema de design](../minha-oficina/frontend/design-system/minha-oficina/MASTER.md) — paleta, tipografia e padrões visuais
 
-Ela contém informações sobre o problema, requisitos, regras de negócio, modelo de dados, fluxo do sistema e decisões tomadas durante o desenvolvimento.
+Este arquivo descreve o problema, a solução, o fluxo de atendimento e a estrutura do repositório. O roteiro de testes traz os cenários completos com resultados esperados.
 
 ## 🎓 Contexto acadêmico
 

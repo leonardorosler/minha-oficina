@@ -10,14 +10,15 @@ import { Badge } from '../Badge';
 
 interface NaOficinaProps {
   aoAbrirDetalhe: (id: number) => void;
+  aoVoltar: () => void;
 }
 
-export function NaOficina({ aoAbrirDetalhe }: NaOficinaProps) {
+export function NaOficina({ aoAbrirDetalhe, aoVoltar }: NaOficinaProps) {
   const { dados, carregando, erro, recarregar } = useApiData(() => api.veiculosNaOficina());
 
   return (
     <>
-      <Header titulo="Na oficina" />
+      <Header titulo="Na oficina" voltar aoVoltar={aoVoltar} />
       <div className="info-strip summary">
         <span>Veículos em atendimento</span>
         <strong>{dados?.length ?? 0}</strong>

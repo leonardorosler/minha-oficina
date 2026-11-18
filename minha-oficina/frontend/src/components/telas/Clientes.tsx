@@ -13,6 +13,7 @@ import { mensagemErro } from '../../services/api';
 interface ClientesProps {
   aoSelecionarCliente: (id: number) => void;
   aoAvisar: (mensagem: string) => void;
+  aoVoltar: () => void;
 }
 
 const formularioVazio = {
@@ -24,7 +25,7 @@ const formularioVazio = {
   observacoes: '',
 };
 
-export function Clientes({ aoSelecionarCliente, aoAvisar }: ClientesProps) {
+export function Clientes({ aoSelecionarCliente, aoAvisar, aoVoltar }: ClientesProps) {
   const { dados, carregando, erro, recarregar } = useApiData(() => api.listar());
   const [busca, setBusca] = useState('');
   const [modal, setModal] = useState<'criar' | 'cpf' | null>(null);
@@ -76,7 +77,7 @@ export function Clientes({ aoSelecionarCliente, aoAvisar }: ClientesProps) {
 
   return (
     <>
-      <Header titulo="Clientes" acao="texto" rotuloAcao="+ Novo" aoClicarAcao={abrirCriar} />
+      <Header titulo="Clientes" voltar aoVoltar={aoVoltar} acao="texto" rotuloAcao="+ Novo" aoClicarAcao={abrirCriar} />
       <Search placeholder="Nome, telefone ou CPF" valor={busca} aoAlterar={setBusca} />
 
       <div className="section-row">

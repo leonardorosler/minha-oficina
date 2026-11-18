@@ -11,12 +11,13 @@ import { formatarData, type Usuario } from '../../types/api';
 
 interface UsuariosProps {
   aoAvisar: (mensagem: string) => void;
+  aoVoltar: () => void;
 }
 
 type Acao = 'criar' | 'editar' | 'desativar' | null;
 const vazio = { nome: '', email: '', senha: '' };
 
-export function Usuarios({ aoAvisar }: UsuariosProps) {
+export function Usuarios({ aoAvisar, aoVoltar }: UsuariosProps) {
   const { dados, carregando, erro, recarregar } = useApiData(() => api.listar());
   const [acao, setAcao] = useState<Acao>(null);
   const [selecionado, setSelecionado] = useState<Usuario | null>(null);
@@ -73,7 +74,7 @@ export function Usuarios({ aoAvisar }: UsuariosProps) {
 
   return (
     <>
-      <Header titulo="Usuários" acao="texto" rotuloAcao="+ Novo" aoClicarAcao={abrirCriar} />
+      <Header titulo="Usuários" voltar aoVoltar={aoVoltar} acao="texto" rotuloAcao="+ Novo" aoClicarAcao={abrirCriar} />
 
       <div className="section-row"><h3>Equipe da oficina</h3><small>{dados?.length ?? 0} usuários</small></div>
 
