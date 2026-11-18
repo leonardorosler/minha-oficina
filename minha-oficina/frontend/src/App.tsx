@@ -106,6 +106,7 @@ export default function App() {
             aoAvisar={avisar}
             aoSelecionarCliente={abrirCliente}
             aoVerHistorico={abrirHistorico}
+            aoClienteExcluido={() => navegar('clientes')}
           />
         );
       case 'nova-os':

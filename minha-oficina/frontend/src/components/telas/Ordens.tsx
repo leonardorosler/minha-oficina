@@ -45,7 +45,7 @@ export function Ordens({ filtro, aoFiltrar, aoAbrirDetalhe }: OrdensProps) {
 
   return (
     <>
-      <Header titulo="Ordens" acao="icone" iconeAcao="filter" aoClicarAcao={() => setSomenteOficina(v => !v)} />
+      <Header titulo="Ordens" />
 
       <Search placeholder="Buscar por OS, cliente ou placa" valor={busca} aoAlterar={setBusca} />
 
@@ -85,12 +85,7 @@ export function Ordens({ filtro, aoFiltrar, aoAbrirDetalhe }: OrdensProps) {
         </div>
       )}
 
-      <div className="section-row">
-        <h3>Ordens de serviço</h3>
-        <button type="button" className="icon-button" onClick={recarregar} aria-label="Atualizar">
-          <Icon nome="history" />
-        </button>
-      </div>
+      <div className="section-row"><h3>Ordens de serviço</h3></div>
 
       {carregando && <Carregando />}
       {erro && <ErroApi mensagem={erro} aoTentarNovamente={recarregar} />}
