@@ -21,7 +21,7 @@
       "created": 1700000000000,
       "name": "Base Environment",
       "data": {
-        "base_url": "http://localhost:3000",
+        "base_url": "http://localhost:3333",
         "token": "",
         "usuario_id": "",
         "cliente_id": "",
@@ -46,7 +46,7 @@
       "modified": 1700000000000,
       "created": 1700000000000,
       "name": "POST /auth/login",
-      "description": "Fazer login e obter token",
+      "description": "Fazer login e obter token. Credenciais de demonstracao: admin@oficina.com / 123456 (criadas por backend/prisma/seed.ts). Se o banco estiver vazio ou a seed nunca tiver sido executada, rode `npm run db:seed` em backend/ ANTES de testar - sem isso o login retorna 401 e todas as rotas privadas tambem (o token nunca e salvo na variavel `token`). O script de teste salva o token no ambiente, usado no header Authorization das demais rotas.",
       "method": "POST",
       "url": "{{ _.base_url }}/auth/login",
       "headers": [
@@ -61,7 +61,13 @@
       },
       "authentication": {},
       "metaSortKey": -1700000000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna token e usuário\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('token');\n  insomnia.expect(data.usuario).to.have.property('id');\n  insomnia.environment.set(\"token\", data.token);\n  insomnia.environment.set(\"usuario_id\", String(data.usuario.id));\n});"
+        }
+      ]
     },
     {
       "_id": "req_me",
@@ -80,7 +86,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699999000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna usuário logado\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('id');\n  insomnia.expect(data).to.have.property('email');\n});"
+        }
+      ]
     },
     {
       "_id": "grp_usuarios",
@@ -116,7 +128,13 @@
       },
       "authentication": {},
       "metaSortKey": -1699998000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 201\", () => insomnia.expect(response.status).to.equal(201));\ninsomnia.test(\"Retorna usuário criado\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('id');\n  insomnia.expect(data).to.have.property('email');\n  insomnia.environment.set(\"usuario_id\", String(data.id));\n});"
+        }
+      ]
     },
     {
       "_id": "req_listar_usuarios",
@@ -135,7 +153,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699997000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna array de usuários\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.be.an('array');\n});"
+        }
+      ]
     },
     {
       "_id": "req_buscar_usuario",
@@ -154,7 +178,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699996000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna usuário\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('id');\n  insomnia.expect(data.id).to.equal(parseInt(insomnia.environment.get('usuario_id')));\n});"
+        }
+      ]
     },
     {
       "_id": "req_editar_usuario",
@@ -181,7 +211,13 @@
       },
       "authentication": {},
       "metaSortKey": -1699995000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Usuário atualizado\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('id');\n  insomnia.expect(data.nome).to.equal(\"João Silva Atualizado\");\n  insomnia.expect(data.email).to.equal(\"joao.novo@oficina.com\");\n});"
+        }
+      ]
     },
     {
       "_id": "req_desativar_usuario",
@@ -200,7 +236,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699994000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Usuário desativado\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('ativo', false);\n});"
+        }
+      ]
     },
     {
       "_id": "grp_clientes",
@@ -236,7 +278,13 @@
       },
       "authentication": {},
       "metaSortKey": -1699993000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 201\", () => insomnia.expect(response.status).to.equal(201));\ninsomnia.test(\"Retorna cliente criado\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('id');\n  insomnia.expect(data).to.have.property('cpf');\n  insomnia.environment.set(\"cliente_id\", String(data.id));\n});"
+        }
+      ]
     },
     {
       "_id": "req_listar_clientes",
@@ -255,7 +303,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699992000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna array de clientes\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.be.an('array');\n});"
+        }
+      ]
     },
     {
       "_id": "req_buscar_cliente_cpf",
@@ -274,7 +328,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699991000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna cliente por CPF\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('id');\n  insomnia.expect(data.cpf).to.equal(\"123.456.789-00\");\n});"
+        }
+      ]
     },
     {
       "_id": "req_buscar_cliente",
@@ -293,7 +353,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699990000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna cliente\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('id');\n  insomnia.expect(data.id).to.equal(parseInt(insomnia.environment.get('cliente_id')));\n});"
+        }
+      ]
     },
     {
       "_id": "req_veiculos_cliente",
@@ -312,7 +378,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699989000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna array de veículos\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.be.an('array');\n});"
+        }
+      ]
     },
     {
       "_id": "req_atendimentos_cliente",
@@ -331,7 +403,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699988000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna array de atendimentos\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.be.an('array');\n});"
+        }
+      ]
     },
     {
       "_id": "req_atualizar_cliente",
@@ -358,7 +436,13 @@
       },
       "authentication": {},
       "metaSortKey": -1699987000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Cliente atualizado\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('id');\n  insomnia.expect(data.nome).to.equal(\"Maria Santos Atualizada\");\n  insomnia.expect(data.telefone).to.equal(\"(11) 98888-7777\");\n});"
+        }
+      ]
     },
     {
       "_id": "req_deletar_cliente",
@@ -377,7 +461,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699986000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200 ou 204\", () => insomnia.expect([200, 204]).to.include(response.status));\ninsomnia.test(\"Cliente deletado\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('id');\n});"
+        }
+      ]
     },
     {
       "_id": "grp_veiculos",
@@ -413,7 +503,13 @@
       },
       "authentication": {},
       "metaSortKey": -1699985000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 201\", () => insomnia.expect(response.status).to.equal(201));\ninsomnia.test(\"Retorna veículo criado\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('id');\n  insomnia.expect(data).to.have.property('placa');\n  insomnia.environment.set(\"veiculo_id\", String(data.id));\n});"
+        }
+      ]
     },
     {
       "_id": "req_listar_veiculos",
@@ -432,7 +528,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699984000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna array de veículos\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.be.an('array');\n});"
+        }
+      ]
     },
     {
       "_id": "req_buscar_veiculo_placa",
@@ -451,7 +553,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699983000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna veículo por placa\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('id');\n  insomnia.expect(data.placa).to.equal(\"ABC-1234\");\n});"
+        }
+      ]
     },
     {
       "_id": "req_buscar_veiculo",
@@ -470,7 +578,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699982000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna veículo\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('id');\n  insomnia.expect(data.id).to.equal(parseInt(insomnia.environment.get('veiculo_id')));\n});"
+        }
+      ]
     },
     {
       "_id": "req_atendimentos_veiculo",
@@ -489,7 +603,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699981000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna array de atendimentos\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.be.an('array');\n});"
+        }
+      ]
     },
     {
       "_id": "req_atualizar_veiculo",
@@ -516,7 +636,13 @@
       },
       "authentication": {},
       "metaSortKey": -1699980000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Veículo atualizado\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('id');\n  insomnia.expect(data.marca).to.equal(\"Honda\");\n  insomnia.expect(data.modelo).to.equal(\"Civic\");\n});"
+        }
+      ]
     },
     {
       "_id": "req_deletar_veiculo",
@@ -535,7 +661,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699979000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200 ou 204\", () => insomnia.expect([200, 204]).to.include(response.status));\ninsomnia.test(\"Veículo deletado\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('id');\n});"
+        }
+      ]
     },
     {
       "_id": "grp_atendimentos",
@@ -571,7 +703,13 @@
       },
       "authentication": {},
       "metaSortKey": -1699978000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 201\", () => insomnia.expect(response.status).to.equal(201));\ninsomnia.test(\"Retorna atendimento criado\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('id');\n  insomnia.expect(data.status).to.equal(\"AGUARDANDO\");\n  insomnia.environment.set(\"atendimento_id\", String(data.id));\n});"
+        }
+      ]
     },
     {
       "_id": "req_listar_atendimentos",
@@ -617,7 +755,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699977000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna array de atendimentos\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.be.an('array');\n});"
+        }
+      ]
     },
     {
       "_id": "req_veiculos_oficina",
@@ -636,7 +780,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699976000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna array de veículos na oficina\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.be.an('array');\n});"
+        }
+      ]
     },
     {
       "_id": "req_buscar_atendimento",
@@ -655,7 +805,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699975000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna atendimento\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('id');\n  insomnia.expect(data.id).to.equal(parseInt(insomnia.environment.get('atendimento_id')));\n});"
+        }
+      ]
     },
     {
       "_id": "req_editar_atendimento",
@@ -682,7 +838,13 @@
       },
       "authentication": {},
       "metaSortKey": -1699974000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Atendimento atualizado\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('id');\n  insomnia.expect(data.diagnostico).to.equal(\"Correia dentada gasta + tensor\");\n  insomnia.expect(data.servicoPrevisto).to.equal(\"Troca de correia dentada e tensor\");\n});"
+        }
+      ]
     },
     {
       "_id": "req_cancelar_atendimento",
@@ -701,7 +863,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699973000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Atendimento cancelado\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('id');\n  insomnia.expect(data.status).to.equal(\"CANCELADO\");\n});"
+        }
+      ]
     },
     {
       "_id": "grp_fluxo",
@@ -737,7 +905,13 @@
       },
       "authentication": {},
       "metaSortKey": -1699972000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Status alterado\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('atendimento');\n  insomnia.expect(data.atendimento).to.have.property('status');\n  insomnia.expect([\"EM_SERVICO\", \"PRONTO\", \"FINALIZADO\"]).to.include(data.atendimento.status);\n});"
+        }
+      ]
     },
     {
       "_id": "req_fluxo_completo",
@@ -756,7 +930,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699971000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna fluxo completo\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('atendimento');\n  insomnia.expect(data).to.have.property('historico');\n  insomnia.expect(data).to.have.property('transicoesPossiveis');\n  insomnia.expect(data.historico).to.be.an('array');\n});"
+        }
+      ]
     },
     {
       "_id": "req_transicoes_possiveis",
@@ -775,7 +955,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699970000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna transições possíveis\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('transicoesPossiveis');\n  insomnia.expect(data.transicoesPossiveis).to.be.an('array');\n});"
+        }
+      ]
     },
     {
       "_id": "grp_historico",
@@ -803,7 +989,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699969000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna histórico de status\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.be.an('array');\n  if (data.length > 0) {\n    insomnia.expect(data[0]).to.have.property('status');\n    insomnia.expect(data[0]).to.have.property('dataHora');\n  }\n});"
+        }
+      ]
     },
     {
       "_id": "req_historico_veiculo",
@@ -834,7 +1026,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699968000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna histórico do veículo\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.be.an('array');\n});"
+        }
+      ]
     },
     {
       "_id": "req_historico_cliente",
@@ -865,7 +1063,13 @@
       ],
       "authentication": {},
       "metaSortKey": -1699967000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna histórico do cliente\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.be.an('array');\n});"
+        }
+      ]
     },
     {
       "_id": "grp_dashboard",
@@ -893,15 +1097,21 @@
       ],
       "authentication": {},
       "metaSortKey": -1699966000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna dados do dashboard\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('totalClientes');\n  insomnia.expect(data).to.have.property('totalVeiculos');\n  insomnia.expect(data).to.have.property('atendimentosPorStatus');\n  insomnia.expect(data).to.have.property('faturamento');\n});"
+        }
+      ]
     },
     {
       "_id": "grp_fluxo_completo_teste",
       "parentId": "wrk_minha_oficina",
       "modified": 1700000000000,
       "created": 1700000000000,
-      "name": "🧪 Teste Fluxo Completo",
-      "description": "Sequência para testar o fluxo completo: AGUARDANDO → EM_SERVICO → PRONTO → FINALIZADO",
+      "name": "🧪 Teste Fluxo Completo (E2E)",
+      "description": "Fluxo completo passo a passo: Cliente → Veículo → Atendimento → AGUARDANDO → EM_SERVICO → PRONTO → FINALIZADO + Validações + Histórico + Bloqueios",
       "_type": "request_group"
     },
     {
@@ -909,8 +1119,8 @@
       "parentId": "grp_fluxo_completo_teste",
       "modified": 1700000000000,
       "created": 1700000000000,
-      "name": "1️⃣ Criar Cliente + Veículo + Atendimento",
-      "description": "Criar dados base para teste",
+      "name": "1️⃣ [SETUP] Criar Cliente",
+      "description": "ETAPA 1: Cadastrar cliente para o teste de fluxo completo",
       "method": "POST",
       "url": "{{ _.base_url }}/clientes",
       "headers": [
@@ -925,19 +1135,25 @@
       ],
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"nome\": \"Cliente Teste Fluxo\",\n  \"telefone\": \"(11) 91234-5678\",\n  \"email\": \"teste.fluxo@email.com\",\n  \"cpf\": \"987.654.321-00\",\n  \"endereco\": \"Av. Teste, 999\"\n}"
+        "text": "{\n  \"nome\": \"Cliente Teste Fluxo E2E\",\n  \"telefone\": \"(11) 91234-5678\",\n  \"email\": \"teste.fluxo.e2e@email.com\",\n  \"cpf\": \"987.654.321-00\",\n  \"endereco\": \"Av. Teste E2E, 999\",\n  \"observacoes\": \"Cliente para teste de fluxo completo\"\n}"
       },
       "authentication": {},
       "metaSortKey": -1699965000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 201 - Cliente criado\", () => insomnia.expect(response.status).to.equal(201));\ninsomnia.test(\"Retorna cliente com ID\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('id');\n  insomnia.expect(data.nome).to.equal(\"Cliente Teste Fluxo E2E\");\n  insomnia.expect(data.cpf).to.equal(\"987.654.321-00\");\n  insomnia.environment.set(\"cliente_id\", String(data.id));\n  console.log('✅ cliente_id salvo:', data.id);\n});"
+        }
+      ]
     },
     {
       "_id": "req_teste_2_veiculo",
       "parentId": "grp_fluxo_completo_teste",
       "modified": 1700000000000,
       "created": 1700000000000,
-      "name": "2️⃣ Criar Veículo",
-      "description": "Criar veículo para o cliente",
+      "name": "2️⃣ [SETUP] Criar Veículo",
+      "description": "ETAPA 2: Cadastrar veículo vinculado ao cliente criado",
       "method": "POST",
       "url": "{{ _.base_url }}/veiculos",
       "headers": [
@@ -952,19 +1168,25 @@
       ],
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"clienteId\": {{ _.cliente_id }},\n  \"placa\": \"TEST-0001\",\n  \"marca\": \"Ford\",\n  \"modelo\": \"Ka\",\n  \"ano\": 2020,\n  \"cor\": \"Branco\"\n}"
+        "text": "{\n  \"clienteId\": {{ _.cliente_id }},\n  \"placa\": \"E2E-TEST\",\n  \"marca\": \"Ford\",\n  \"modelo\": \"Ka\",\n  \"ano\": 2020,\n  \"cor\": \"Branco\",\n  \"observacoes\": \"Veículo para teste E2E\"\n}"
       },
       "authentication": {},
       "metaSortKey": -1699964000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 201 - Veículo criado\", () => insomnia.expect(response.status).to.equal(201));\ninsomnia.test(\"Retorna veículo com ID e cliente vinculado\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('id');\n  insomnia.expect(data.placa).to.equal(\"E2E-TEST\");\n  insomnia.expect(data.clienteId).to.equal(parseInt(insomnia.environment.get('cliente_id')));\n  insomnia.environment.set(\"veiculo_id\", String(data.id));\n  console.log('✅ veiculo_id salvo:', data.id);\n});"
+        }
+      ]
     },
     {
       "_id": "req_teste_3_atendimento",
       "parentId": "grp_fluxo_completo_teste",
       "modified": 1700000000000,
       "created": 1700000000000,
-      "name": "3️⃣ Abrir Atendimento (AGUARDANDO)",
-      "description": "Criar atendimento - status inicial AGUARDANDO",
+      "name": "3️⃣ [SETUP] Abrir Atendimento (AGUARDANDO)",
+      "description": "ETAPA 3: Criar atendimento - status inicial AGUARDANDO",
       "method": "POST",
       "url": "{{ _.base_url }}/atendimentos",
       "headers": [
@@ -979,100 +1201,25 @@
       ],
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"veiculoId\": {{ _.veiculo_id }},\n  \"problemaRelatado\": \"Teste fluxo completo\",\n  \"diagnostico\": \"Teste\",\n  \"servicoPrevisto\": \"Teste fluxo\",\n  \"orcamentoValor\": 100.00\n}"
+        "text": "{\n  \"veiculoId\": {{ _.veiculo_id }},\n  \"problemaRelatado\": \"Barulho estranho no motor ao acelerar\",\n  \"diagnostico\": \"Pendente avaliação\",\n  \"servicoPrevisto\": \"Diagnóstico completo + reparo\",\n  \"orcamentoValor\": 500.00,\n  \"observacoes\": \"Cliente autorizou orçamento até R$ 1000\"\n}"
       },
       "authentication": {},
       "metaSortKey": -1699963000000,
-      "_type": "request"
-    },
-    {
-      "_id": "req_teste_4_aguardando_para_em_servico",
-      "parentId": "grp_fluxo_completo_teste",
-      "modified": 1700000000000,
-      "created": 1700000000000,
-      "name": "4️⃣ AGUARDANDO → EM_SERVICO",
-      "description": "Mover para EM_SERVICO",
-      "method": "PATCH",
-      "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/status",
-      "headers": [
+      "_type": "request",
+      "scripts": [
         {
-          "name": "Content-Type",
-          "value": "application/json"
-        },
-        {
-          "name": "Authorization",
-          "value": "Bearer {{ _.token }}"
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 201 - Atendimento criado\", () => insomnia.expect(response.status).to.equal(201));\ninsomnia.test(\"Status inicial AGUARDANDO\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data.status).to.equal(\"AGUARDANDO\");\n  insomnia.expect(data.veiculoId).to.equal(parseInt(insomnia.environment.get('veiculo_id')));\n  insomnia.expect(data.orcamentoValor).to.equal(500.00);\n  insomnia.environment.set(\"atendimento_id\", String(data.id));\n  console.log('✅ atendimento_id salvo:', data.id);\n});"
         }
-      ],
-      "body": {
-        "mimeType": "application/json",
-        "text": "{\n  \"statusNovo\": \"EM_SERVICO\",\n  \"observacao\": \"Iniciando serviço\"\n}"
-      },
-      "authentication": {},
-      "metaSortKey": -1699962000000,
-      "_type": "request"
+      ]
     },
     {
-      "_id": "req_teste_5_em_servico_para_pronto",
+      "_id": "req_teste_3_5_verificar_inicial",
       "parentId": "grp_fluxo_completo_teste",
       "modified": 1700000000000,
       "created": 1700000000000,
-      "name": "5️⃣ EM_SERVICO → PRONTO",
-      "description": "Mover para PRONTO",
-      "method": "PATCH",
-      "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/status",
-      "headers": [
-        {
-          "name": "Content-Type",
-          "value": "application/json"
-        },
-        {
-          "name": "Authorization",
-          "value": "Bearer {{ _.token }}"
-        }
-      ],
-      "body": {
-        "mimeType": "application/json",
-        "text": "{\n  \"statusNovo\": \"PRONTO\",\n  \"observacao\": \"Serviço concluído, aguardando retirada\"\n}"
-      },
-      "authentication": {},
-      "metaSortKey": -1699961000000,
-      "_type": "request"
-    },
-    {
-      "_id": "req_teste_6_pronto_para_finalizado",
-      "parentId": "grp_fluxo_completo_teste",
-      "modified": 1700000000000,
-      "created": 1700000000000,
-      "name": "6️⃣ PRONTO → FINALIZADO",
-      "description": "Finalizar atendimento (define dataSaida)",
-      "method": "PATCH",
-      "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/status",
-      "headers": [
-        {
-          "name": "Content-Type",
-          "value": "application/json"
-        },
-        {
-          "name": "Authorization",
-          "value": "Bearer {{ _.token }}"
-        }
-      ],
-      "body": {
-        "mimeType": "application/json",
-        "text": "{\n  \"statusNovo\": \"FINALIZADO\",\n  \"observacao\": \"Cliente retirou veículo, pagamento confirmado\"\n}"
-      },
-      "authentication": {},
-      "metaSortKey": -1699960000000,
-      "_type": "request"
-    },
-    {
-      "_id": "req_teste_7_ver_fluxo",
-      "parentId": "grp_fluxo_completo_teste",
-      "modified": 1700000000000,
-      "created": 1700000000000,
-      "name": "7️⃣ Ver Fluxo Completo",
-      "description": "Visualizar histórico completo de transições",
+      "name": "3️⃣.5 [VERIFICAÇÃO] Consultar Atendimento + Transições Iniciais",
+      "description": "ETAPA 3.5: Verificar se atendimento foi criado corretamente e quais transições são possíveis no status AGUARDANDO",
       "method": "GET",
       "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/fluxo",
       "headers": [
@@ -1082,16 +1229,221 @@
         }
       ],
       "authentication": {},
+      "metaSortKey": -1699962500000,
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Atendimento está em AGUARDANDO\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data.atendimento.status).to.equal(\"AGUARDANDO\");\n  insomnia.expect(data.atendimento.id).to.equal(parseInt(insomnia.environment.get('atendimento_id')));\n});\ninsomnia.test(\"Transições possíveis: apenas EM_SERVICO e CANCELADO\", () => {\n  const data = JSON.parse(response.body);\n  const transicoes = data.transicoesPossiveis.map(t => t.statusDestino);\n  insomnia.expect(transicoes).to.include.members([\"EM_SERVICO\", \"CANCELADO\"]);\n  insomnia.expect(transicoes).to.not.include.members([\"PRONTO\", \"FINALIZADO\"]);\n  console.log('✅ Transições permitidas de AGUARDANDO:', transicoes);\n});\ninsomnia.test(\"Histórico tem 1 registro (criação)\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data.historico).to.be.an('array');\n  insomnia.expect(data.historico.length).to.equal(1);\n  insomnia.expect(data.historico[0].status).to.equal(\"AGUARDANDO\");\n});"
+        }
+      ]
+    },
+    {
+      "_id": "req_teste_4_aguardando_para_em_servico",
+      "parentId": "grp_fluxo_completo_teste",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "4️⃣ [TRANSIÇÃO] AGUARDANDO → EM_SERVICO",
+      "description": "ETAPA 4: Iniciar serviço - transição válida AGUARDANDO → EM_SERVICO",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/status",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"statusNovo\": \"EM_SERVICO\",\n  \"observacao\": \"Iniciando diagnóstico do motor\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1699962000000,
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200 - Transição realizada\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Status alterado para EM_SERVICO\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data.atendimento.status).to.equal(\"EM_SERVICO\");\n  insomnia.expect(data.atendimento).to.have.property('dataEntrada');\n  console.log('✅ Status: EM_SERVICO | dataEntrada:', data.atendimento.dataEntrada);\n});"
+        }
+      ]
+    },
+    {
+      "_id": "req_teste_4_5_verificar_em_servico",
+      "parentId": "grp_fluxo_completo_teste",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "4️⃣.5 [VERIFICAÇÃO] Consultar Fluxo após EM_SERVICO",
+      "description": "ETAPA 4.5: Verificar histórico e transições possíveis agora em EM_SERVICO",
+      "method": "GET",
+      "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/fluxo",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699961500000,
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Status agora é EM_SERVICO\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data.atendimento.status).to.equal(\"EM_SERVICO\");\n});\ninsomnia.test(\"Transições possíveis: PRONTO, CANCELADO, VOLTAR_AGUARDANDO\", () => {\n  const data = JSON.parse(response.body);\n  const transicoes = data.transicoesPossiveis.map(t => t.statusDestino);\n  insomnia.expect(transicoes).to.include.members([\"PRONTO\", \"CANCELADO\", \"AGUARDANDO\"]);\n  insomnia.expect(transicoes).to.not.include(\"FINALIZADO\");\n  console.log('✅ Transições permitidas de EM_SERVICO:', transicoes);\n});\ninsomnia.test(\"Histórico tem 2 registros (AGUARDANDO → EM_SERVICO)\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data.historico.length).to.equal(2);\n  const statuses = data.historico.map(h => h.status);\n  insomnia.expect(statuses).to.include.members([\"AGUARDANDO\", \"EM_SERVICO\"]);\n});"
+        }
+      ]
+    },
+    {
+      "_id": "req_teste_5_em_servico_para_pronto",
+      "parentId": "grp_fluxo_completo_teste",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "5️⃣ [TRANSIÇÃO] EM_SERVICO → PRONTO",
+      "description": "ETAPA 5: Concluir serviço - transição válida EM_SERVICO → PRONTO",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/status",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"statusNovo\": \"PRONTO\",\n  \"observacao\": \"Diagnóstico concluído: troca de velas e filtros. Aguardando aprovação do cliente para peças.\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1699961000000,
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200 - Transição realizada\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Status alterado para PRONTO\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data.atendimento.status).to.equal(\"PRONTO\");\n  console.log('✅ Status: PRONTO');\n});"
+        }
+      ]
+    },
+    {
+      "_id": "req_teste_5_5_verificar_pronto",
+      "parentId": "grp_fluxo_completo_teste",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "5️⃣.5 [VERIFICAÇÃO] Consultar Fluxo após PRONTO",
+      "description": "ETAPA 5.5: Verificar histórico e transições possíveis agora em PRONTO",
+      "method": "GET",
+      "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/fluxo",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699960500000,
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Status agora é PRONTO\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data.atendimento.status).to.equal(\"PRONTO\");\n});\ninsomnia.test(\"Transições possíveis: FINALIZADO, CANCELADO, VOLTAR_EM_SERVICO\", () => {\n  const data = JSON.parse(response.body);\n  const transicoes = data.transicoesPossiveis.map(t => t.statusDestino);\n  insomnia.expect(transicoes).to.include.members([\"FINALIZADO\", \"CANCELADO\", \"EM_SERVICO\"]);\n  insomnia.expect(transicoes).to.not.include(\"AGUARDANDO\");\n  console.log('✅ Transições permitidas de PRONTO:', transicoes);\n});\ninsomnia.test(\"Histórico tem 3 registros\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data.historico.length).to.equal(3);\n  const statuses = data.historico.map(h => h.status);\n  insomnia.expect(statuses).to.include.members([\"AGUARDANDO\", \"EM_SERVICO\", \"PRONTO\"]);\n});"
+        }
+      ]
+    },
+    {
+      "_id": "req_teste_6_pronto_para_finalizado",
+      "parentId": "grp_fluxo_completo_teste",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "6️⃣ [TRANSIÇÃO] PRONTO → FINALIZADO",
+      "description": "ETAPA 6: Finalizar atendimento - transição válida PRONTO → FINALIZADO (define dataSaida)",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/status",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"statusNovo\": \"FINALIZADO\",\n  \"observacao\": \"Cliente aprovou orçamento, serviço realizado, pagamento confirmado via PIX\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -1699960000000,
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200 - Transição realizada\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Status alterado para FINALIZADO\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data.atendimento.status).to.equal(\"FINALIZADO\");\n  insomnia.expect(data.atendimento).to.have.property('dataSaida');\n  console.log('✅ Status: FINALIZADO | dataSaida:', data.atendimento.dataSaida);\n});"
+        }
+      ]
+    },
+    {
+      "_id": "req_teste_6_5_verificar_finalizado",
+      "parentId": "grp_fluxo_completo_teste",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "6️⃣.5 [VERIFICAÇÃO] Consultar Fluxo Completo Final",
+      "description": "ETAPA 6.5: Verificar fluxo completo com 4 status, dataSaida preenchida, e transições bloqueadas",
+      "method": "GET",
+      "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/fluxo",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699959500000,
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Status FINALIZADO com dataSaida\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data.atendimento.status).to.equal(\"FINALIZADO\");\n  insomnia.expect(data.atendimento).to.have.property('dataSaida');\n  insomnia.expect(data.atendimento.dataSaida).to.not.be.null;\n});\ninsomnia.test(\"NENHUMA transição possível (status final)\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data.transicoesPossiveis).to.be.an('array');\n  insomnia.expect(data.transicoesPossiveis.length).to.equal(0);\n  console.log('✅ Nenhuma transição permitida - status final');\n});\ninsomnia.test(\"Histórico completo: 4 transições na ordem correta\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data.historico.length).to.equal(4);\n  const statuses = data.historico.map(h => h.status);\n  insomnia.expect(statuses[0]).to.equal(\"AGUARDANDO\");\n  insomnia.expect(statuses[1]).to.equal(\"EM_SERVICO\");\n  insomnia.expect(statuses[2]).to.equal(\"PRONTO\");\n  insomnia.expect(statuses[3]).to.equal(\"FINALIZADO\");\n  console.log('✅ Histórico:', statuses.join(' → '));\n});"
+        }
+      ]
+    },
+    {
+      "_id": "req_teste_7_ver_fluxo",
+      "parentId": "grp_fluxo_completo_teste",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "7️⃣ [HISTÓRICO] Consultar Histórico de Status Detalhado",
+      "description": "ETAPA 7: Consultar endpoint específico de histórico de status com timestamps",
+      "method": "GET",
+      "url": "{{ _.base_url }}/historico/atendimentos/{{ _.atendimento_id }}/status",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
       "metaSortKey": -1699959000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"Retorna array com 4 registros de status\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.be.an('array');\n  insomnia.expect(data.length).to.equal(4);\n});\ninsomnia.test(\"Cada registro tem status, dataHora e observacao\", () => {\n  const data = JSON.parse(response.body);\n  data.forEach(item => {\n    insomnia.expect(item).to.have.property('status');\n    insomnia.expect(item).to.have.property('dataHora');\n    insomnia.expect(item).to.have.property('observacao');\n  });\n  console.log('✅ Histórico detalhado:', data.map(d => `${d.status} - ${d.dataHora}`).join(' | '));\n});"
+        }
+      ]
     },
     {
       "_id": "req_teste_8_tentar_alterar_finalizado",
       "parentId": "grp_fluxo_completo_teste",
       "modified": 1700000000000,
       "created": 1700000000000,
-      "name": "8️⃣ Tentar Alterar FINALIZADO (Deve Falhar)",
-      "description": "Testar bloqueio de alteração em FINALIZADO",
+      "name": "8️⃣ [TESTE NEGATIVO] Tentar Alterar FINALIZADO → EM_SERVICO (Deve Falhar)",
+      "description": "ETAPA 8: Tentar transição inválida FINALIZADO → EM_SERVICO - deve retornar erro 400/409",
       "method": "PATCH",
       "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/status",
       "headers": [
@@ -1106,19 +1458,25 @@
       ],
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"statusNovo\": \"EM_SERVICO\",\n  \"observacao\": \"Tentativa inválida\"\n}"
+        "text": "{\n  \"statusNovo\": \"EM_SERVICO\",\n  \"observacao\": \"Tentativa inválida de reabrir atendimento finalizado\"\n}"
       },
       "authentication": {},
       "metaSortKey": -1699958000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 400 ou 409 - Transição bloqueada\", () => insomnia.expect([400, 409]).to.include(response.status));\ninsomnia.test(\"Retorna erro descritivo\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('error');\n  console.log('✅ Erro esperado:', data.error);\n});\ninsomnia.test(\"Status NÃO alterado (continua FINALIZADO)\", () => {\n  const data = JSON.parse(response.body);\n  if (data.atendimento) {\n    insomnia.expect(data.atendimento.status).to.equal(\"FINALIZADO\");\n  }\n});"
+        }
+      ]
     },
     {
       "_id": "req_teste_9_transicao_invalida",
       "parentId": "grp_fluxo_completo_teste",
       "modified": 1700000000000,
       "created": 1700000000000,
-      "name": "9️⃣ Transição Inválida (Deve Falhar)",
-      "description": "Testar AGUARDANDO → PRONTO (pular EM_SERVICO)",
+      "name": "9️⃣ [TESTE NEGATIVO] Tentar Pular Etapa AGUARDANDO → PRONTO (Deve Falhar)",
+      "description": "ETAPA 9: Tentar transição inválida pulando EM_SERVICO - deve retornar erro 400/409",
       "method": "PATCH",
       "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/status",
       "headers": [
@@ -1133,11 +1491,42 @@
       ],
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"statusNovo\": \"PRONTO\",\n  \"observacao\": \"Tentativa de pular etapa\"\n}"
+        "text": "{\n  \"statusNovo\": \"PRONTO\",\n  \"observacao\": \"Tentativa de pular EM_SERVICO\"\n}"
       },
       "authentication": {},
       "metaSortKey": -1699957000000,
-      "_type": "request"
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 400 ou 409 - Transição bloqueada\", () => insomnia.expect([400, 409]).to.include(response.status));\ninsomnia.test(\"Retorna erro descritivo\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data).to.have.property('error');\n  console.log('✅ Erro esperado:', data.error);\n});\ninsomnia.test(\"Status NÃO alterado (continua FINALIZADO)\", () => {\n  const data = JSON.parse(response.body);\n  if (data.atendimento) {\n    insomnia.expect(data.atendimento.status).to.equal(\"FINALIZADO\");\n  }\n});"
+        }
+      ]
+    },
+    {
+      "_id": "req_teste_10_resumo_final",
+      "parentId": "grp_fluxo_completo_teste",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "🔟 [RESUMO] Validação Final Completa do Fluxo",
+      "description": "ETAPA 10: Consulta final consolidada - fluxo completo + histórico veículo + histórico cliente + veículos na oficina",
+      "method": "GET",
+      "url": "{{ _.base_url }}/fluxo-atendimento/{{ _.atendimento_id }}/fluxo",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1699956000000,
+      "_type": "request",
+      "scripts": [
+        {
+          "type": "javascript",
+          "text": "insomnia.test(\"Status 200\", () => insomnia.expect(response.status).to.equal(200));\ninsomnia.test(\"=== RESUMO FINAL DO FLUXO E2E ===\", () => {\n  const data = JSON.parse(response.body);\n  console.log('\\n==================================');\n  console.log('📋 FLUXO COMPLETO VALIDADO COM SUCESSO');\n  console.log('==================================');\n  console.log('🆔 Atendimento ID:', data.atendimento.id);\n  console.log('📊 Status Final:', data.atendimento.status);\n  console.log('📅 Data Entrada:', data.atendimento.dataEntrada);\n  console.log('📅 Data Saída:', data.atendimento.dataSaida);\n  console.log('💰 Orçamento:', data.atendimento.orcamentoValor);\n  console.log('🔄 Histórico (' + data.historico.length + ' transições):');\n  data.historico.forEach((h, i) => console.log(`   ${i+1}. ${h.status} - ${h.dataHora} - ${h.observacao}`));\n  console.log('🚫 Transições possíveis:', data.transicoesPossiveis.length, '(bloqueado - status final)');\n  console.log('==================================\\n');\n});\ninsomnia.test(\"Validações obrigatórias atendidas\", () => {\n  const data = JSON.parse(response.body);\n  insomnia.expect(data.atendimento.status).to.equal(\"FINALIZADO\");\n  insomnia.expect(data.atendimento.dataSaida).to.not.be.null;\n  insomnia.expect(data.historico.length).to.equal(4);\n  insomnia.expect(data.transicoesPossiveis.length).to.equal(0);\n  const statuses = data.historico.map(h => h.status);\n  insomnia.expect(statuses).to.deep.equal([\"AGUARDANDO\", \"EM_SERVICO\", \"PRONTO\", \"FINALIZADO\"]);\n});"
+        }
+      ]
     }
   ]
 }

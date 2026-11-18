@@ -4,7 +4,13 @@
 **Escopo:** Análise baseada em evidências visuais de 12 capturas de tela (produção)  
 **Público-alvo:** Senhor de 48 anos (prioridade: letras grandes, alto contraste, botões grandes, simplicidade)  
 **Identidade visual:** Azul profundo #0f2a43, teal #0d9488, âmbar #f59e0b, fonte Inter  
-**Modo:** Apenas leitura de imagens. Nenhum arquivo foi modificado.
+**Modo:** Levantamento feito a partir das telas do aplicativo em produção. O código do aplicativo não foi alterado por este relatório.
+
+As capturas que serviram de evidência ficam em `docs/evidencias/`: `01-login.png`,
+`02-painel.png`, `03-clientes.png`, `04-cliente-veiculos.png`, `05-ordens.png`,
+`06-detalhe-os.png`, `08-nova-os.png`, `09-modal-selecao.png`, `10-menu.png`,
+`11-historico.png` e `12-historico-320px.png`. As imagens `13` a `16` mostram o
+depois das correções (modal com rolagem, histórico em 320px e cartões coloridos).
 
 ---
 
@@ -157,4 +163,4 @@ Os achados abaixo foram corrigidos e validados em produção:
 - `memoria/PROXIMO-PASSO.md`
 - `memoria/HISTORICO-DE-EXECUCAO.md`
 
-**Relatório entregue em:** `RELATORIO-AUDITORIA-UI-UX.md`
+**Relatório:** `docs/AUDITORIA-UI-UX.md`
