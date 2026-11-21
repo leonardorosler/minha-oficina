@@ -49,6 +49,20 @@ frontend local para a API publicada, configure `VITE_API_URL` no `.env`.
 
 ---
 
+## 🚀 Publicação automática
+
+Cada envio para a branch `main` dispara o GitHub Actions, que prepara e publica
+os dois projetos na Vercel:
+
+- `minha-oficina-api` com a pasta `backend`;
+- `minha-oficina-frontend` com a pasta `minha-oficina/frontend`.
+
+As variáveis de ambiente ficam guardadas na Vercel e no GitHub como segredos.
+O mesmo processo pode ser iniciado pela aba **Actions** no GitHub, usando
+**Run workflow**.
+
+---
+
 ## ✅ O que testar em 5 minutos
 
 1. Acesse https://minha-oficina-frontend.vercel.app
@@ -97,6 +111,7 @@ minha-oficina/
 │   ├── design-system/             # identidade visual
 │   └── README.md                  # documentação do frontend
 ├── minha-oficina-offline/         # protótipo navegável original
+├── .github/workflows/             # publicação automática na Vercel
 ├── docs/                          # documentação detalhada e roteiro de testes
 └── README.md                      # este arquivo
 ```

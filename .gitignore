@@ -1,2 +1,5 @@
 # Arquivos temporários das ferramentas de teste
 .playwright-mcp/
+
+# Configuração local da Vercel
+.vercel/
