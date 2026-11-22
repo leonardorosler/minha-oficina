@@ -6,7 +6,7 @@ Interface em português, com letras grandes, alto contraste e botões fáceis de
 ## Executar
 
 ```bash
-cd minha-oficina/frontend
+cd frontend
 npm install
 cp .env.example .env   # ajuste VITE_API_URL se o backend não estiver na 3333
 npm run dev

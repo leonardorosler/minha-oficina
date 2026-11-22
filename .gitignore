@@ -1,3 +1,15 @@
+# Dependências e builds
+node_modules/
+dist/
+backend/generated/
+
+# Variáveis de ambiente (os exemplos continuam versionados)
+.env
+.env.local
+.env.*.local
+!.env.example
+!**/.env.example
+
 # Arquivos temporários das ferramentas de teste
 .playwright-mcp/
 

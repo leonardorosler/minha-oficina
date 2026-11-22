@@ -6,7 +6,7 @@ navegador. Não é necessário instalar nada.
 ## Preparação
 
 - Link do aplicativo: https://minha-oficina-frontend.vercel.app
-- Link da API: https://minha-oficina-api.vercel.app
+- Link da API: https://minha-oficina-api.onrender.com
 - Quadro de planejamento (Miro): https://miro.com/welcomeonboard/THRBRC85WmJ6SE5ENnlZaHg0bCtNaWYwV29hc2ZUbnVZNGdVL1JremhsM0pwTmwzK1F1eVd6aHF0RDRxQmtvTDZKSlNRWlA3VzhLeDQ1YWx1RUVpL1VZTlhyQzdHUDhmU3Q4cEQyQ3FKb2ZDdnE1aUxIckUrYWNTWE1WWmIwakZBd044SHFHaVlWYWk0d3NxeHNmeG9BPT0hdjE=?share_link_id=105175980003
 - Usuário: `admin@oficina.com`
 - Senha: `123456` — Carlos Costa, o dono da oficina
@@ -107,13 +107,13 @@ com o e-mail do mecânico, a opção **Usuários** não aparece no Menu — ela 
 
 ## Verificação rápida da API
 
-Acesse https://minha-oficina-api.vercel.app no navegador:
+Acesse https://minha-oficina-api.onrender.com no navegador:
 deve retornar `{"message":"API Minha Oficina funcionando"}`.
 
 Para verificar a autenticação diretamente:
 
 ```bash
-curl -X POST https://minha-oficina-api.vercel.app/auth/login \
+curl -X POST https://minha-oficina-api.onrender.com/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"admin@oficina.com","senha":"123456"}'
 ```

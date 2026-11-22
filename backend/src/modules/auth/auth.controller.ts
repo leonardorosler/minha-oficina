@@ -10,22 +10,28 @@ import { buscaUsuarioPorId } from "../usuarios/usuarios.service.js";
 const NOME_COOKIE = "refreshToken";
 const SETE_DIAS = 7 * 24 * 60 * 60 * 1000;
 
-function lerCookie(req: Request, nome: string): string | undefined {
-  const cabecalho = req.headers.cookie;
-  if (!cabecalho) return undefined;
-  const item = cabecalho
-    .split(";")
-    .map(parte => parte.trim())
-    .find(parte => parte.startsWith(`${nome}=`));
-  return item ? decodeURIComponent(item.slice(nome.length + 1)) : undefined;
+function emProducao(): boolean {
+  return (
+    process.env.NODE_ENV === "production" ||
+    Boolean(process.env.RENDER) ||
+    Boolean(process.env.VERCEL)
+  );
+}
+
+function opcoesCookie() {
+  const producao = emProducao();
+
+  return {
+    httpOnly: true,
+    secure: producao,
+    sameSite: (producao ? "none" : "lax") as "none" | "lax",
+    path: "/",
+  };
 }
 
 function definirCookie(res: Response, token: string) {
   res.cookie(NOME_COOKIE, token, {
-    httpOnly: true,
-    secure: Boolean(process.env.VERCEL || process.env.NODE_ENV === "production"),
-    sameSite: "none",
-    path: "/",
+    ...opcoesCookie(),
     maxAge: SETE_DIAS,
   });
 }
@@ -67,7 +73,7 @@ export async function loginController(req: Request, res: Response) {
 }
 
 export async function refreshController(req: Request, res: Response) {
-  const token = lerCookie(req, NOME_COOKIE);
+  const token = req.cookies?.[NOME_COOKIE];
   if (!token) return res.status(401).json({ error: "Refresh token não informado" });
 
   try {
@@ -84,8 +90,8 @@ export async function refreshController(req: Request, res: Response) {
 }
 
 export async function logoutController(req: Request, res: Response) {
-  await logout(lerCookie(req, NOME_COOKIE));
-  res.clearCookie(NOME_COOKIE, { path: "/", sameSite: "none", secure: true });
+  await logout(req.cookies?.[NOME_COOKIE]);
+  res.clearCookie(NOME_COOKIE, opcoesCookie());
   return res.status(200).json({ message: "Sessão encerrada" });
 }
 

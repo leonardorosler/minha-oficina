@@ -8,20 +8,20 @@ publicados em URLs diferentes e comunicando-se por API HTTP com autenticação J
 
 ---
 
-## 🌐 Acesso em produção (forma mais rápida de testar)
+## 🌐 Acesso em produção
 
 | Aplicação | Link |
 |---|---|
 | **Aplicativo mobile** | https://minha-oficina-frontend.vercel.app |
-| **API** (verificação) | https://minha-oficina-api.vercel.app |
-| **Quadro no Miro** (planejamento) | https://miro.com/welcomeonboard/THRBRC85WmJ6SE5ENnlZaHg0bCtNaWYwV29hc2ZUbnVZNGdVL1JremhsM0pwTmwzK1F1eVd6aHF0RDRxQmtvTDZKSlNRWlA3VzhLeDQ1YWx1RUVpL1VZTlhyQzdHUDhmU3Q4cEQyQ3FKb2ZDdnE1aUxIckUrYWNTWE1WWmIwakZBd044SHFHaVlWYWk0d3NxeHNmeG9BPT0hdjE=?share_link_id=105175980003 |
+| **API (Render)** | https://minha-oficina-api.onrender.com |
 
 **Login de demonstração:** `admin@oficina.com` · senha `123456` (Carlos Costa, o dono da oficina)
 
 > Dica: abra o link do aplicativo no celular ou use o modo responsivo do navegador
 > com largura de 390px para ver a interface mobile como foi projetada.
 > A API é usada pelo aplicativo; abrir o link dela no navegador mostra apenas
-> a mensagem `API Minha Oficina funcionando`.
+> a mensagem `API Minha Oficina funcionando`. No plano gratuito do Render, o
+> serviço pode levar alguns segundos para responder depois de ficar ocioso.
 
 ➡️ **[Roteiro completo de teste para o professor](docs/ROTEIRO-DE-TESTES.md)**
 
@@ -29,37 +29,81 @@ publicados em URLs diferentes e comunicando-se por API HTTP com autenticação J
 
 ## ▶️ Executar localmente
 
-Pré-requisitos: Node.js 20+ e acesso ao banco PostgreSQL (Neon).
+Pré-requisitos: Node.js 20.19+ e acesso ao banco PostgreSQL (Neon).
 
 ```bash
 # 1) Backend — porta 3333
 cd backend
 npm install
+cp .env.example .env   # preencha DATABASE_URL e JWT_SECRET
 npm run dev
 
 # 2) Frontend — porta 5173 (em outro terminal)
-cd minha-oficina/frontend
+cd frontend
 npm install
 cp .env.example .env
 npm run dev
 ```
 
+No PowerShell, troque `cp` por `Copy-Item`. O `npm install` do backend já roda
+`prisma generate` automaticamente.
+
 Por padrão o frontend aponta para `http://localhost:3333`. Para apontar o
 frontend local para a API publicada, configure `VITE_API_URL` no `.env`.
 
+Para simular produção no backend:
+
+```bash
+cd backend
+npm run build
+npm start
+```
+
 ---
 
-## 🚀 Publicação automática
+## 🚀 Deploy
 
-Cada envio para a branch `main` dispara o GitHub Actions, que prepara e publica
-os dois projetos na Vercel:
+O repositório está preparado para dois serviços independentes:
 
-- `minha-oficina-api` com a pasta `backend`;
-- `minha-oficina-frontend` com a pasta `minha-oficina/frontend`.
+| Parte | Plataforma | Configuração |
+|---|---|---|
+| API | **Render** | Blueprint `render.yaml`, root `backend` |
+| Frontend | **Vercel** | Root Directory `frontend`, framework Vite |
 
-As variáveis de ambiente ficam guardadas na Vercel e no GitHub como segredos.
-O mesmo processo pode ser iniciado pela aba **Actions** no GitHub, usando
-**Run workflow**.
+Ordem recomendada: **primeiro o backend** (para ter a URL da API), **depois o
+frontend** (que precisa dessa URL no build). Os dois se atualizam sozinhos a
+cada `git push` na branch `main`.
+
+### Backend no Render
+
+1. No Render, escolha **New → Blueprint** e conecte este repositório.
+2. O `render.yaml` cria o serviço `minha-oficina-api` com:
+   - build: `npm ci --include=dev && npm run build`
+   - start: `npm start`
+   - health check: `/health`
+3. Preencha os segredos solicitados:
+   - `DATABASE_URL` — URL do Neon (use a que contém `-pooler`);
+   - `JWT_SECRET` — um segredo forte;
+   - `FRONTEND_URL` — URL do frontend na Vercel.
+4. Anote a URL gerada, por exemplo `https://minha-oficina-api.onrender.com`.
+5. Valide abrindo `https://minha-oficina-api.onrender.com/health` — deve
+   responder `{"status":"ok"}`.
+
+> O banco do Neon já está com as migrações aplicadas. Se um dia criar um banco
+> novo, rode `npm run db:deploy` (e `npm run db:seed`) a partir de `backend`
+> com o `DATABASE_URL` configurado.
+
+### Frontend na Vercel
+
+1. Importe este repositório na Vercel.
+2. Configure **Root Directory** = `frontend`.
+3. Framework preset: **Vite**.
+4. Em **Environment Variables**, defina:
+   - `VITE_API_URL=https://minha-oficina-api.onrender.com`
+5. Faça o deploy. O `VITE_API_URL` é lido no build; se mudar, redeploye.
+
+> O frontend usa rotas por hash (`#painel`, `#detalhe`), então não precisa de
+> rewrite de SPA na Vercel.
 
 ---
 
@@ -89,7 +133,7 @@ Existem três papéis de usuário:
 | Papel | O que pode fazer |
 |---|---|
 | Dono (Carlos) | Tudo, inclusive excluir registros e gerenciar usuários |
-| Mecânico | Abrir e atualizar os atendimentos que criou, além de consultar os demais dados |
+| Mecânico | Atualizar os atendimentos que criou, além de consultar os demais dados |
 | Recepcionista | Cadastrar clientes e veículos e abrir ordens de serviço |
 
 O card de cada ordem fica colorido conforme o status: amarelo (aguardando), azul
@@ -100,19 +144,20 @@ para entender a situação de relance, sem precisar ler o texto.
 
 ```text
 minha-oficina/
-├── backend/                       # API Express + Prisma + PostgreSQL
-│   ├── api/index.ts               # handler serverless (Vercel)
+├── backend/                       # API Express + Prisma + PostgreSQL (Render)
+│   ├── prisma/                    # schema, migrations e seed
 │   └── src/modules/               # auth, dashboard, clientes, veículos,
 │                                  # atendimentos, fluxo, histórico, usuários
-├── minha-oficina/frontend/        # aplicativo mobile React + Vite
+├── frontend/                      # aplicativo mobile React + Vite (Vercel)
 │   ├── src/components/telas/      # telas do aplicativo
 │   ├── src/services/endpoints.ts  # todas as rotas da API
 │   ├── src/context/AuthContext.tsx
 │   ├── design-system/             # identidade visual
 │   └── README.md                  # documentação do frontend
-├── minha-oficina-offline/         # protótipo navegável original
-├── .github/workflows/             # publicação automática na Vercel
-├── docs/                          # documentação detalhada e roteiro de testes
+├── docs/                          # documentação, roteiro de testes e imagens
+├── render.yaml                    # Blueprint do backend no Render
+├── Insomnia_Minha_Oficina.json    # coleção de testes da API
+├── .gitignore
 └── README.md                      # este arquivo
 ```
 
@@ -120,7 +165,7 @@ minha-oficina/
 
 - **Frontend**: React 18, TypeScript, Vite, CSS
 - **Backend**: Node.js, Express 5, TypeScript, Prisma 7, PostgreSQL (Neon)
-- **Deploy**: Vercel (dois projetos independentes)
+- **Deploy**: Render (API) e Vercel (frontend)
 
 ## 📚 Documentação
 
@@ -129,8 +174,9 @@ minha-oficina/
 - [Auditoria UI/UX](docs/AUDITORIA-UI-UX.md)
 - [Teste com mecânico de 48 anos](docs/TESTE-USUARIO-48ANOS.md)
 - [O que mudou e por quê](docs/O-QUE-MUDOU.md)
-- [Frontend](minha-oficina/frontend/README.md)
-- [Sistema de design](minha-oficina/frontend/design-system/minha-oficina/MASTER.md)
+- [Frontend](frontend/README.md)
+- [Sistema de design](frontend/design-system/minha-oficina/MASTER.md)
+- [Apresentação das telas](docs/apresentacao-7-telas-mobile.png)
 
 ## ⚠️ Observações
 

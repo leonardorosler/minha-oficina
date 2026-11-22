@@ -106,12 +106,10 @@ O MVP do projeto contempla:
 
 ```text
 minha-oficina/
-├── minha-oficina/
-│   └── frontend/   # Aplicativo mobile (React + Vite)
-├── backend/        # API e regras de negócio
-├── minha-oficina-offline/
-│   └── versao-editavel/  # Protótipo navegável original
+├── backend/        # API e regras de negócio (Render)
+├── frontend/       # Aplicativo mobile React + Vite (Vercel)
 ├── docs/           # Documentação do projeto
+├── render.yaml     # Blueprint do backend no Render
 └── README.md
 ```
 
@@ -123,32 +121,37 @@ O front-end e o back-end permanecem no mesmo repositório, mas são **projetos i
 # Backend (porta 3333)
 cd backend
 npm install
+cp .env.example .env
 npm run dev
 
 # Frontend (porta 5173)
-cd minha-oficina/frontend
+cd frontend
 npm install
+cp .env.example .env
 npm run dev
 ```
 
-O endereço da API pode ser configurado em `minha-oficina/frontend/.env` (ver `.env.example`). O padrão é `http://localhost:3333`.
+O endereço da API pode ser configurado em `frontend/.env` (ver `.env.example`). O padrão é `http://localhost:3333`.
 
 Usuário de demonstração (seed): `admin@oficina.com` / `123456`.
 
 ### Publicação
 
-As aplicações são publicadas separadamente na Vercel:
+As aplicações são publicadas separadamente:
 
-| Aplicação | URL de produção |
-|---|---|
-| Frontend | https://minha-oficina-frontend.vercel.app |
-| API | https://minha-oficina-api.vercel.app |
-| Quadro de planejamento (Miro) | https://miro.com/welcomeonboard/THRBRC85WmJ6SE5ENnlZaHg0bCtNaWYwV29hc2ZUbnVZNGdVL1JremhsM0pwTmwzK1F1eVd6aHF0RDRxQmtvTDZKSlNRWlA3VzhLeDQ1YWx1RUVpL1VZTlhyQzdHUDhmU3Q4cEQyQ3FKb2ZDdnE1aUxIckUrYWNTWE1WWmIwakZBd044SHFHaVlWYWk0d3NxeHNmeG9BPT0hdjE=?share_link_id=105175980003 |
+| Aplicação | Plataforma | URL de produção |
+|---|---|---|
+| Frontend | Vercel | https://minha-oficina-frontend.vercel.app |
+| API | Render | https://minha-oficina-api.onrender.com |
 
-O projeto da API usa `api/index.ts` como função serverless e `vercel.json` com
-redirecionamento de todas as rotas. As variáveis `DATABASE_URL` e `JWT_SECRET`
-são configuradas como segredos no projeto `minha-oficina-api`. O frontend usa a
-variável `VITE_API_URL` apontando para a API publicada.
+O backend usa o Blueprint `render.yaml` (root `backend`), com build
+`npm ci --include=dev && npm run build`, start `npm start` e health check em
+`/health`. As variáveis `DATABASE_URL`, `JWT_SECRET` e `FRONTEND_URL` são
+configuradas no painel do Render.
+
+O frontend é um projeto Vercel com **Root Directory** `frontend` e framework
+Vite. A variável `VITE_API_URL` aponta para a URL pública do Render e é lida
+no momento do build.
 
 ## 📚 Documentação
 
@@ -157,8 +160,8 @@ variável `VITE_API_URL` apontando para a API publicada.
 - [Auditoria UI/UX](./AUDITORIA-UI-UX.md) — achados, severidades e prioridades
 - [Teste com mecânico de 48 anos](./TESTE-USUARIO-48ANOS.md) — rotina real e medições de legibilidade
 - [O que mudou e por quê](./O-QUE-MUDOU.md) — decisões tomadas nesta rodada, em linguagem simples
-- [README do frontend](../minha-oficina/frontend/README.md) — rotas da API, telas e estrutura do app
-- [Sistema de design](../minha-oficina/frontend/design-system/minha-oficina/MASTER.md) — paleta, tipografia e padrões visuais
+- [README do frontend](../frontend/README.md) — rotas da API, telas e estrutura do app
+- [Sistema de design](../frontend/design-system/minha-oficina/MASTER.md) — paleta, tipografia e padrões visuais
 
 Este arquivo descreve o problema, a solução, o fluxo de atendimento e a estrutura do repositório. O roteiro de testes traz os cenários completos com resultados esperados.
 

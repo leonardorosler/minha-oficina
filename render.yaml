@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: minha-oficina-api
+    runtime: node
+    plan: free
+    region: virginia
+    branch: main
+    rootDir: backend
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
